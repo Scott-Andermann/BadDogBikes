@@ -1,0 +1,83 @@
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  Colors,
+} from "chart.js";
+import { Scatter } from "react-chartjs-2";
+import { Position } from "./data/draw";
+import { AxlePaths } from "./App";
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  Colors
+);
+
+interface LineChartProps {
+  inputData: Position[];
+  arrayInput: AxlePaths[];
+  title: string;
+  xLabel?: string;
+  yLabel?: string;
+}
+
+const normalizeData = (dataArray: Position[]) => {
+  const { x, y } = dataArray[dataArray.length - 1];
+  return dataArray.map((point) => {
+    return { x: point.x - x, y: point.y - y };
+  });
+};
+
+const ScatterChart = ({
+  inputData,
+  arrayInput,
+  title,
+  xLabel,
+  yLabel,
+}: LineChartProps) => {
+  
+  const data = {
+    datasets: [
+      {
+        label: "Current Iteration",
+        data: normalizeData(inputData),
+        backgroundColor: "red",
+      },
+      ...arrayInput.map((input) => {
+        return {
+          label: input.title,
+          data: normalizeData(input.path),
+          backgroundColor: input.color,
+        };
+      }),
+    ],
+  };
+
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: "top" as const,
+      },
+      title: {
+        display: true,
+        text: title,
+      },
+    },
+  };
+
+  return <Scatter options={options} data={data} />;
+};
+
+export default ScatterChart;
