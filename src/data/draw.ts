@@ -153,6 +153,18 @@ DrawMasterProps) => {
     zeroOffset,
     humanInput: undefined,
   });
+  drawFrontTriangle({
+    ctx,
+    layoutValues,
+    zeroOffset,
+    humanInput: undefined,
+  });
+  drawFork({
+    ctx,
+    layoutValues,
+    zeroOffset,
+    humanInput: undefined,
+  });
   step += direction;
   if (!paused) {
     setTimeout(() => {
@@ -343,11 +355,109 @@ DrawFrameProps) => {
   ctx.beginPath();
   ctx.moveTo(zeroOffset.x, zeroOffset.y);
   ctx.lineTo(
-    zeroOffset.x - 750 * Math.cos((layoutValues.seatTubeAngle * Math.PI) / 180),
-    zeroOffset.y - 750 * Math.sin((layoutValues.seatTubeAngle * Math.PI) / 180)
+    zeroOffset.x - 450 * Math.cos((layoutValues.seatTubeAngle * Math.PI) / 180),
+    zeroOffset.y - 450 * Math.sin((layoutValues.seatTubeAngle * Math.PI) / 180)
   );
   ctx.stroke();
   ctx.lineWidth = 1;
+};
+
+const drawFrontTriangle = ({
+  ctx,
+  layoutValues,
+  zeroOffset,
+}: DrawFrameProps) => {
+  ctx.lineWidth = 10;
+  ctx.lineCap = "round";
+  ctx.beginPath();
+  const seatTubeAngle = layoutValues.seatTubeAngle * Math.PI / 180;
+  const headTubeAngle = (layoutValues.headTubeAngle * Math.PI) / 180;
+  const bottomOfHeadTube = {
+    x:
+      zeroOffset.x +
+      layoutValues.reach +
+      layoutValues.headTubeLength * Math.cos(headTubeAngle),
+    y:
+      zeroOffset.y -
+      layoutValues.bbDrop -
+      layoutValues.forkLength * Math.sin(headTubeAngle) +
+      layoutValues.forkOffset * Math.cos(headTubeAngle),
+  };
+  ctx.moveTo(
+    zeroOffset.x - 300 * Math.cos(seatTubeAngle),
+    zeroOffset.y - 300 * Math.sin(seatTubeAngle)
+  );
+
+  ctx.lineTo(
+    zeroOffset.x + layoutValues.reach,
+    bottomOfHeadTube.y - layoutValues.headTubeLength * Math.sin(headTubeAngle)
+  );
+  ctx.lineTo(bottomOfHeadTube.x, bottomOfHeadTube.y);
+  ctx.lineTo(zeroOffset.x, zeroOffset.y);
+  ctx.stroke();
+
+  // Draw Fork
+  ctx.lineWidth = 20;
+  ctx.strokeStyle = "orange";
+  ctx.beginPath();
+  ctx.moveTo(bottomOfHeadTube.x, bottomOfHeadTube.y);
+  ctx.lineTo(
+    bottomOfHeadTube.x + layoutValues.forkLength * Math.cos(headTubeAngle),
+    bottomOfHeadTube.y + layoutValues.forkLength * Math.sin(headTubeAngle)
+  );
+  ctx.lineTo(
+    bottomOfHeadTube.x +
+      layoutValues.forkLength * Math.cos(headTubeAngle) +
+      layoutValues.forkOffset * Math.sin(headTubeAngle),
+    bottomOfHeadTube.y +
+      layoutValues.forkLength * Math.sin(headTubeAngle) -
+      layoutValues.forkOffset * Math.cos(headTubeAngle)
+  );
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.arc(
+    bottomOfHeadTube.x +
+      layoutValues.forkLength * Math.cos(headTubeAngle) +
+      layoutValues.forkOffset * Math.sin(headTubeAngle),
+    bottomOfHeadTube.y +
+      layoutValues.forkLength * Math.sin(headTubeAngle) -
+      layoutValues.forkOffset * Math.cos(headTubeAngle),
+    (29 / 2) * 25.4 - 15,
+    0,
+    2 * Math.PI
+  );
+  ctx.lineWidth = 30;
+  ctx.strokeStyle = "black";
+  ctx.stroke()
+
+  ctx.lineWidth = 1;
+};
+
+const drawFork = ({ ctx, layoutValues, zeroOffset }: DrawFrameProps) => {
+  ctx.lineWidth = 20;
+  ctx.strokeStyle = "orange";
+  const headTubeAngle = (layoutValues.headTubeAngle * Math.PI) / 180;
+  const bottomOfHeadTube = {
+    x:
+      zeroOffset.x +
+      layoutValues.reach +
+      layoutValues.headTubeLength * Math.cos(headTubeAngle),
+    y:
+      zeroOffset.y -
+      layoutValues.bbDrop -
+      layoutValues.forkLength * Math.sin(headTubeAngle) +
+      layoutValues.forkOffset * Math.cos(headTubeAngle),
+  };
+  ctx.beginPath();
+  ctx.moveTo(bottomOfHeadTube.x, bottomOfHeadTube.y);
+  ctx.lineTo(
+    bottomOfHeadTube.x + layoutValues.forkLength * Math.cos(headTubeAngle),
+    bottomOfHeadTube.y + layoutValues.forkLength * Math.sin(headTubeAngle)
+  );
+  ctx.stroke();
+
+  ctx.lineWidth = 1;
+  ctx.strokeStyle = "black";
 };
 
 export default draw;

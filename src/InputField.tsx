@@ -18,7 +18,7 @@ const InputField = ({
 }) => {
   const inputClasses =
     "border border-solid border-gray-300 rounded-sm w-20 text-xs";
-  const labelClasses = "ml-2 whitespace-nowrap text-sm mr-2";
+  const labelClasses = "ml-2 whitespace-nowrap text-sm mr-2 text-gray-100";
   return (
     <div className="flex flex-col gap-1">
       <div className="flex flex-row justify-between">
@@ -33,7 +33,7 @@ const InputField = ({
             {...register(id, { required: required, valueAsNumber: true })}
           />
           {currentValue !== undefined ? (
-            <p className="text-xs w-10 text-center">{currentValue}</p>
+            <p className="text-xs w-10 text-center text-green-100">{currentValue}</p>
           ) : null}
         </div>
       </div>

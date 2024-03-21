@@ -24,7 +24,7 @@ ChartJS.register(
   Colors
 );
 
-interface LineChartProps {
+interface ScatterChartProps {
   inputData: Position[];
   arrayInput: LayoutArray[];
   title: string;
@@ -39,11 +39,11 @@ const normalizeData = (dataArray: Position[]) => {
   });
 };
 
-const ScatterChart = ({
+const ScatterPlot = ({
   inputData,
   arrayInput,
   title,
-}: LineChartProps) => {
+}: ScatterChartProps) => {
   
   const data = {
     datasets: [
@@ -78,4 +78,4 @@ const ScatterChart = ({
   return <Scatter options={options} data={data} />;
 };
 
-export default ScatterChart;
+export default ScatterPlot;

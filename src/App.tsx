@@ -17,6 +17,7 @@ import HumanInputs, { HumanInputProps } from "./HumanInputs";
 import InputForm, { defaultValues, DefaultValues } from "./InputForm";
 import LayoutDiagram from "./LayoutDiagram";
 import LayoutList from "./LayoutList";
+import ResultsWrapper from "./ResultsWrapper";
 import ScatterPlot from "./ScatterPlot";
 
 export interface AxlePaths {
@@ -38,7 +39,9 @@ function App() {
   const [layoutValues, setLayoutValues] =
     useState<DefaultValues>(defaultValues);
   const [layoutArray, setLayoutArray] = useState<LayoutArray[]>([]);
-  const [humanInput, setHumanInput] = useState<HumanInputProps | undefined>(undefined);
+  const [humanInput, setHumanInput] = useState<HumanInputProps | undefined>(
+    undefined
+  );
   const [key, setKey] = useState(0);
 
   useEffect(() => {
@@ -51,7 +54,6 @@ function App() {
 
   // unmount and remount canvas component
 
-
   useEffect(() => {
     console.log("storing data");
     if (layoutArray.length !== 0) {
@@ -60,16 +62,11 @@ function App() {
   }, [layoutArray]);
 
   console.log("humanInput: ", humanInput);
-  
+
   return (
     <div>
       {/* <HumanInputs setHumanInput={setHumanInput}/> */}
       <div className="flex flex-row">
-        {/* <InputForm
-          setNewValues={setLayoutValues}
-          setIsOpen={setIsOpen}
-          layoutValues={layoutValues}
-        /> */}
         {/* <ConfirmModal
           isOpen={isOpen}
           setLayoutArray={setLayoutArray}
@@ -80,15 +77,18 @@ function App() {
           onClose={() => setIsOpen(false)}
         /> */}
         <div>
-          <LayoutDiagram layoutValues={layoutValues} layoutType="singlePivot" />
-          {/* <ScatterPlot
-            inputData={axlePath}
-            arrayInput={layoutArray}
-            title="Axle Path"
-          /> */}
+          <ResultsWrapper
+            layoutValues={layoutValues}
+            layoutType="singlePivot"
+          />
+          <InputForm
+            setNewValues={setLayoutValues}
+            setIsOpen={setIsOpen}
+            layoutValues={layoutValues}
+          />
         </div>
         <div>
-          <h2>Iterations</h2>
+          <h2 className="text-gray-100">Iterations</h2>
           <LayoutList
             layoutArray={layoutArray}
             setLayoutArray={setLayoutArray}

@@ -9,10 +9,9 @@ interface CanvasProps {
   seatStayPosition: Position[];
   rearPivotPosition: Position[];
   axlePath: Position[];
-  bellcrankOffset: Position;
-  zeroOffset: Position;
   layoutValues: DefaultValues;
   humanInput: HumanInputProps | undefined;
+  setShowLayout: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const Canvas = ({
@@ -20,15 +19,20 @@ const Canvas = ({
   seatStayPosition,
   rearPivotPosition,
   axlePath,
-  bellcrankOffset,
-  zeroOffset,
   layoutValues,
   humanInput,
+  setShowLayout,
 }: CanvasProps) => {
   const [paused, setPaused] = useState(true);
   const [pausePosition, setPausePosition] = useState("");
-  // const [zoomLevel, setZoomLevel] = useState(1);
+  const [zoomLevel, setZoomLevel] = useState(1);
   const ref = useRef<HTMLCanvasElement>(null);
+  const zeroOffset = { x: 500, y: 750 };
+
+  const bellcrankOffset = {
+    x: zeroOffset.x - layoutValues.bellcrankX,
+    y: zeroOffset.y - layoutValues.bellcrankY,
+  };
   useEffect(() => {
     const canvas = ref.current;
 
@@ -62,7 +66,7 @@ const Canvas = ({
   }
 
   return (
-    <div className="relative">
+    <>
       <canvas
         key={paused ? "1" : "0"}
         ref={ref}
@@ -86,8 +90,15 @@ const Canvas = ({
         >
           Pause At Top
         </button>
+        <button
+          className="bg-blue-400 border-blue-600 border border-solid rounded-sm p-2 w-36"
+          onClick={() => setShowLayout(false)}
+        >
+          Show Charts
+        </button>
+
       </div>
-    </div>
+    </>
   );
 };
 
