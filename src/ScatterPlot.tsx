@@ -11,7 +11,7 @@ import {
 } from "chart.js";
 import { Scatter } from "react-chartjs-2";
 import { Position } from "./data/draw";
-import { AxlePaths } from "./App";
+import { LayoutArray } from "./App";
 
 ChartJS.register(
   CategoryScale,
@@ -26,7 +26,7 @@ ChartJS.register(
 
 interface LineChartProps {
   inputData: Position[];
-  arrayInput: AxlePaths[];
+  arrayInput: LayoutArray[];
   title: string;
   xLabel?: string;
   yLabel?: string;
@@ -43,8 +43,6 @@ const ScatterChart = ({
   inputData,
   arrayInput,
   title,
-  xLabel,
-  yLabel,
 }: LineChartProps) => {
   
   const data = {
@@ -57,8 +55,8 @@ const ScatterChart = ({
       ...arrayInput.map((input) => {
         return {
           label: input.title,
-          data: normalizeData(input.path),
-          backgroundColor: input.color,
+          data: normalizeData(input.axlePath.path),
+          backgroundColor: input.axlePath.color,
         };
       }),
     ],

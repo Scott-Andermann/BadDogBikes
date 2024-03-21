@@ -1,8 +1,16 @@
+import { HumanInputProps } from "../HumanInputs";
 import { DefaultValues } from "../InputForm";
 
 export interface Position {
   x: number;
   y: number;
+}
+
+interface DrawFrameProps {
+  ctx: CanvasRenderingContext2D;
+  layoutValues: DefaultValues;
+  zeroOffset: Position;
+  humanInput: HumanInputProps | undefined;
 }
 
 interface DrawProps {
@@ -13,6 +21,8 @@ interface DrawProps {
   zeroOffset: Position;
   layoutValues: DefaultValues;
   paused?: boolean;
+  pausePosition?: string;
+  humanInput?: HumanInputProps;
 }
 
 interface DrawShockProps extends DrawProps {
@@ -47,9 +57,14 @@ export const draw = ({
   zeroOffset,
   layoutValues,
   paused = false,
-}: DrawMasterProps) => {
+  pausePosition = "",
+}: // humanInput,
+DrawMasterProps) => {
   if (paused) {
     step = shockPosition.length - 1;
+    if (pausePosition === "top") {
+      step = 0;
+    }
   }
   if (step === shockPosition.length - 1) {
     direction = -1;
@@ -77,9 +92,13 @@ export const draw = ({
   ctx.moveTo(zeroOffset.x, zeroOffset.y - 20);
   ctx.lineTo(0, zeroOffset.y - 20);
   ctx.stroke();
+
+  //chainstay
+  ctx.strokeStyle = "purple";
   ctx.beginPath();
-  ctx.arc(zeroOffset.x, zeroOffset.y, 450, 0, 2 * Math.PI)
+  ctx.arc(zeroOffset.x, zeroOffset.y, 450, 0, 2 * Math.PI);
   ctx.stroke();
+  ctx.strokeStyle = "black";
 
   ctx.beginPath();
   ctx.arc(
@@ -128,6 +147,12 @@ export const draw = ({
     bellcrankOffset,
     step,
   });
+  drawSeatTube({
+    ctx,
+    layoutValues,
+    zeroOffset,
+    humanInput: undefined,
+  });
   step += direction;
   if (!paused) {
     setTimeout(() => {
@@ -142,6 +167,7 @@ export const draw = ({
         seatStayPosition,
         rearPivotPosition,
         axlePath,
+        // humanInput,
       });
     }, 17);
   }
@@ -252,6 +278,7 @@ export const drawRearTriangle = ({
 }: DrawRearTriangleProps) => {
   ctx.lineWidth = 10;
   ctx.strokeStyle = "purple";
+  ctx.fillStyle = "purple";
   ctx.beginPath();
   ctx.moveTo(
     zeroOffset.x - layoutValues.swingarmPivotX,
@@ -261,14 +288,13 @@ export const drawRearTriangle = ({
     zeroOffset.x - rearPivotPosition[step].x,
     zeroOffset.y - rearPivotPosition[step].y
   );
-  ctx.lineTo(
-    zeroOffset.x - axlePath[step].x,
-    zeroOffset.y - axlePath[step].y
-  )
+  ctx.lineTo(zeroOffset.x - axlePath[step].x, zeroOffset.y - axlePath[step].y);
   ctx.closePath();
   ctx.stroke();
+  ctx.fill();
+  ctx.fillStyle = "black";
   ctx.beginPath();
-  
+
   ctx.moveTo(
     zeroOffset.x - rearPivotPosition[step].x,
     zeroOffset.y - rearPivotPosition[step].y
@@ -280,30 +306,47 @@ export const drawRearTriangle = ({
   ctx.strokeStyle = "green";
   ctx.stroke();
   ctx.strokeStyle = "black";
-  ctx.lineWidth = 1;
+  ctx.lineWidth = 30;
   ctx.beginPath();
   ctx.arc(
-    zeroOffset.x - layoutValues.swingarmPivotX,
-    zeroOffset.y - layoutValues.swingarmPivotY,
-    450,
+    zeroOffset.x - rearPivotPosition[step].x,
+    zeroOffset.y - rearPivotPosition[step].y,
+    (29 / 2) * 25.4 - 15,
     0,
     2 * Math.PI
   );
   ctx.stroke();
-  ctx.strokeStyle = "black";
 
-  // max end of travel
+  ctx.lineWidth = 1;
+};
+
+export const drawSeatTube = ({
+  ctx,
+  layoutValues,
+  zeroOffset,
+}: // humanInput,
+DrawFrameProps) => {
+  // if (humanInput !== undefined) {
+  //   // draw CG
+  //   const hipLengthFromBB = humanInput.humanInseam - humanInput.crankLength + 45; // const for ankle flexion and pedal stack height
+  //   ctx.beginPath();
+  //   ctx.arc(
+  //     zeroOffset.x - hipLengthFromBB * Math.cos(layoutValues.seatTubeAngle * Math.PI / 180),
+  //     zeroOffset.y - hipLengthFromBB * Math.sin(layoutValues.seatTubeAngle * Math.PI / 180), 40, 0, Math.PI * 2
+  //   );
+  //   ctx.fillStyle = "red"
+  //   ctx.fill();
+  //   ctx.fillStyle = "black";
+  // }
+  ctx.lineWidth = 10;
+  ctx.lineCap = "round";
   ctx.beginPath();
-  ctx.arc(
-    zeroOffset.x - rearPivotPosition[rearPivotPosition.length - 1].x,
-    zeroOffset.y - rearPivotPosition[rearPivotPosition.length - 1].y,
-    10,
-    0,
-    2 * Math.PI
+  ctx.moveTo(zeroOffset.x, zeroOffset.y);
+  ctx.lineTo(
+    zeroOffset.x - 750 * Math.cos((layoutValues.seatTubeAngle * Math.PI) / 180),
+    zeroOffset.y - 750 * Math.sin((layoutValues.seatTubeAngle * Math.PI) / 180)
   );
-  ctx.fill();
-  ctx.strokeStyle = "black";
-
+  ctx.stroke();
   ctx.lineWidth = 1;
 };
 

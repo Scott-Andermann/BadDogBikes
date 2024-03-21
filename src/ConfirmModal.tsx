@@ -1,18 +1,30 @@
-import { SetStateAction, useState, useRef, useEffect, useCallback } from "react";
-import { AxlePaths } from "./App";
+import {
+  SetStateAction,
+  useState,
+  useRef,
+  useEffect,
+  useCallback,
+} from "react";
+import { LayoutArray } from "./App";
 import { Position } from "./data/draw";
+import { DefaultValues } from "./InputForm";
 
 interface ConfirmModalProps {
   isOpen: boolean;
-  setAxlePaths: React.Dispatch<SetStateAction<AxlePaths[]>>;
-  rearPivotPosition: Position[];
+  setLayoutArray: React.Dispatch<SetStateAction<LayoutArray[]>>;
+  layoutObject: LayoutObjectProps;
   onClose: () => void;
+}
+
+interface LayoutObjectProps {
+  layoutValues: DefaultValues;
+  axlePath: Position[];
 }
 
 const ConfirmModal = ({
   isOpen,
-  setAxlePaths,
-  rearPivotPosition,
+  setLayoutArray,
+  layoutObject,
   onClose,
 }: ConfirmModalProps) => {
   const [title, setTitle] = useState("");
@@ -23,9 +35,14 @@ const ConfirmModal = ({
   }, []);
 
   const handleSaveLayout = () => {
-    setAxlePaths((prev) => [
+    setLayoutArray((prev) => [
       ...prev,
-      { path: rearPivotPosition, title: title, color: setColor() },
+      {
+        layoutValues: layoutObject.layoutValues,
+        axlePath: { path: layoutObject.axlePath, color: setColor() },
+        title,
+        id: Math.random() * 10000,
+      },
     ]);
     if (modalRef.current) {
       modalRef.current.close();

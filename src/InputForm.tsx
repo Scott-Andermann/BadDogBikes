@@ -19,6 +19,7 @@ export interface DefaultValues {
   bbDrop: number;
   axleOffsetX: number;
   axleOffsetY: number;
+  seatTubeAngle: number;
 }
 
 export const defaultValues: DefaultValues = {
@@ -38,14 +39,17 @@ export const defaultValues: DefaultValues = {
   chainStay: 450,
   axleOffsetX: 10,
   axleOffsetY: 10,
+  seatTubeAngle: 80,
 };
 
 const InputForm = ({
   setNewValues,
   setIsOpen,
+  layoutValues
 }: {
   setNewValues: React.Dispatch<SetStateAction<DefaultValues>>;
   setIsOpen: React.Dispatch<SetStateAction<boolean>>;
+  layoutValues: DefaultValues
 }) => {
   const {
     register,
@@ -55,7 +59,6 @@ const InputForm = ({
   const inputClasses = "border border-solid border-gray-300 rounded-sm";
 
   const onSubmit = (data: DefaultValues) => {
-
     setNewValues(data);
   };
 
@@ -70,6 +73,7 @@ const InputForm = ({
             required
             register={register}
             errors={errors}
+            currentValue={layoutValues.bellcrankX}
           />
           <InputField
             label="Bellcrank Y"
@@ -77,6 +81,7 @@ const InputForm = ({
             required
             register={register}
             errors={errors}
+            currentValue={layoutValues.bellcrankY}
           />
         </div>
         <div className="flex flex-col gap-1">
@@ -87,6 +92,7 @@ const InputForm = ({
             required
             register={register}
             errors={errors}
+            currentValue={layoutValues.bellcrankA}
           />
           <InputField
             label="Bellcrank B"
@@ -94,6 +100,7 @@ const InputForm = ({
             required
             register={register}
             errors={errors}
+            currentValue={layoutValues.bellcrankB}
           />
           <InputField
             label="Bellcrank C"
@@ -101,6 +108,7 @@ const InputForm = ({
             required
             register={register}
             errors={errors}
+            currentValue={layoutValues.bellcrankC}
           />
         </div>
         <div className="flex flex-col gap-1">
@@ -111,6 +119,7 @@ const InputForm = ({
             required
             register={register}
             errors={errors}
+            currentValue={layoutValues.shockMountX}
           />
           <InputField
             label="Shock Y"
@@ -118,6 +127,7 @@ const InputForm = ({
             required
             register={register}
             errors={errors}
+            currentValue={layoutValues.shockMountY}
           />
         </div>
         <div className="flex flex-col gap-1">
@@ -128,6 +138,7 @@ const InputForm = ({
             required
             register={register}
             errors={errors}
+            currentValue={layoutValues.shockMin}
           />
           <InputField
             label="Maximum Shock Length"
@@ -135,6 +146,7 @@ const InputForm = ({
             required
             register={register}
             errors={errors}
+            currentValue={layoutValues.shockMax}
           />
         </div>
         <div className="flex flex-col gap-1">
@@ -145,6 +157,7 @@ const InputForm = ({
             required
             register={register}
             errors={errors}
+            currentValue={layoutValues.swingarmPivotX}
           />
           <InputField
             label="Swingarm Pivot Y"
@@ -152,6 +165,7 @@ const InputForm = ({
             required
             register={register}
             errors={errors}
+            currentValue={layoutValues.swingarmPivotY}
           />
         </div>
         <InputField
@@ -160,6 +174,7 @@ const InputForm = ({
           required
           register={register}
           errors={errors}
+          currentValue={layoutValues.bbDrop}
         />
         <InputField
           label="Chainstay Length"
@@ -167,6 +182,7 @@ const InputForm = ({
           required
           register={register}
           errors={errors}
+          currentValue={layoutValues.chainStay}
         />
         <InputField
           label="Axle Offset X"
@@ -174,6 +190,7 @@ const InputForm = ({
           required
           register={register}
           errors={errors}
+          currentValue={layoutValues.axleOffsetX}
         />
         <InputField
           label="Axle Offset Y"
@@ -181,6 +198,15 @@ const InputForm = ({
           required
           register={register}
           errors={errors}
+          currentValue={layoutValues.axleOffsetY}
+        />
+        <InputField
+          label="Seat Tube Angle"
+          id="seatTubeAngle"
+          required
+          register={register}
+          errors={errors}
+          currentValue={layoutValues.seatTubeAngle}
         />
         <div className="flex flex-row gap-2">
           <input className={`${inputClasses} max-w-max p-2`} type="submit" />
