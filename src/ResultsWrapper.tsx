@@ -16,12 +16,15 @@ import {
 import * as React from "react";
 import { LayoutArray } from "./App";
 import { calculateAntiSquatLine, calculateIFC } from "./data/antiSquat";
+import { calculateAntiSquat } from "./data/antiSquat";
 
 interface ResultsWrapperProps {
   layoutValues: DefaultValues;
   layoutArray: LayoutArray[];
   axlePath: Position[];
   setAxlePath: React.Dispatch<React.SetStateAction<Position[]>>;
+  antiSquat: Position[];
+  setAntiSquat: React.Dispatch<React.SetStateAction<Position[]>>;
 }
 
 const ResultsWrapper = ({
@@ -29,11 +32,13 @@ const ResultsWrapper = ({
   layoutArray,
   axlePath,
   setAxlePath,
+  antiSquat,
+  setAntiSquat,
 }: ResultsWrapperProps) => {
   const [showLayout, setShowLayout] = useState(true);
   const [rearPivotPosition, setRearPivotPosition] = useState<Position[]>([]);
   const [IFC, setIFC] = useState<Position[]>([]);
-  const [antiSquat, setAntiSquat] = useState<number[]>([]);
+  const [antiSquatHeight, setAntiSquatHeight] = useState<number[]>([]);
 
   const {
     shockSteps,
@@ -88,10 +93,17 @@ const ResultsWrapper = ({
 
   useEffect(() => {
     setIFC(calculateIFC(layoutValues, axlePath));
-    setAntiSquat(calculateAntiSquatLine(axlePath, layoutValues));
-  }, [layoutValues, axlePath]);
+    const antiSquatHeight = calculateAntiSquatLine(axlePath, layoutValues)
+    setAntiSquatHeight(antiSquatHeight);
 
-  // console.log(axlePath);
+    const antiSquat = calculateAntiSquat({x: 0, y: 600}, antiSquatHeight)
+    const chartData = antiSquat.map((step, index) => {
+      return {x: axlePath[index].y, y: step}
+    })
+    
+    setAntiSquat(chartData)
+    
+  }, [layoutValues, axlePath]);
 
   return (
     <div className="relative w-[160vh] h-[80vh]">
@@ -104,7 +116,7 @@ const ResultsWrapper = ({
           rearPivotPosition={rearPivotPosition}
           axlePath={axlePath}
           setShowLayout={setShowLayout}
-          antiSquatHeight={antiSquat}
+          antiSquatHeight={antiSquatHeight}
           IFC={IFC}
         />
       ) : (
@@ -113,8 +125,15 @@ const ResultsWrapper = ({
             <div className="h-60">
               <ScatterPlot
                 inputData={axlePath}
-                arrayInput={layoutArray}
+                arrayInput={layoutArray.map((layout) => layout.axlePath)}
                 title="Axle Path"
+              />
+              <ScatterPlot
+                inputData={antiSquat}
+                arrayInput={layoutArray.map((layout) => layout.antiSquat)}
+                title="Anti Squat"
+                normalize={true}
+                travelOnXaxis={true}
               />
             </div>
           ) : null}

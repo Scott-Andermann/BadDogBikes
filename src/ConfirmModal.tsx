@@ -19,6 +19,7 @@ interface ConfirmModalProps {
 interface LayoutObjectProps {
   layoutValues: DefaultValues;
   axlePath: Position[];
+  antiSquat: Position[];
 }
 
 const ConfirmModal = ({
@@ -35,15 +36,18 @@ const ConfirmModal = ({
   }, []);
 
   const handleSaveLayout = () => {
-    setLayoutArray((prev) => [
+    setLayoutArray((prev) => {
+      const color = setColor();
+      return [
       ...prev,
       {
         layoutValues: layoutObject.layoutValues,
-        axlePath: { path: layoutObject.axlePath, color: setColor() },
+        axlePath: { path: layoutObject.axlePath, color: color, name: title },
+        antiSquat: { path: layoutObject.antiSquat, color: color, name: title },
         title,
         id: Math.random() * 10000,
       },
-    ]);
+    ]});
     if (modalRef.current) {
       modalRef.current.close();
     }

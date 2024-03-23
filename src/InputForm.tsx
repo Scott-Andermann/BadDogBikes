@@ -1,4 +1,4 @@
-import { SetStateAction } from "react";
+import { SetStateAction, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import InputField from "./InputField";
 
@@ -64,15 +64,18 @@ const InputForm = ({
   setNewValues,
   setIsOpen,
   layoutValues,
+  updateFromList,
 }: {
   setNewValues: React.Dispatch<SetStateAction<DefaultValues>>;
   setIsOpen: React.Dispatch<SetStateAction<boolean>>;
   layoutValues: DefaultValues;
+  updateFromList: boolean;
 }) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm({ defaultValues: defaultValues });
   const inputClasses =
     "border border-solid border-gray-300 rounded-sm bg-blue-200";
@@ -92,6 +95,10 @@ const InputForm = ({
     layoutValues.bbDrop +
     (layoutValues.forkLength + layoutValues.headTubeLength) *
       Math.sin(headTubeAngle);
+
+  useEffect(() => {
+    reset(layoutValues);
+  }, [updateFromList]);
 
   return (
     <form onBlur={handleSubmit((data) => onSubmit(data))}>

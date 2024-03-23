@@ -11,7 +11,7 @@ import {
 } from "chart.js";
 import { Scatter } from "react-chartjs-2";
 import { Position } from "./data/draw";
-import { LayoutArray } from "./App";
+import { Path } from "./App";
 
 ChartJS.register(
   CategoryScale,
@@ -26,37 +26,52 @@ ChartJS.register(
 
 interface ScatterChartProps {
   inputData: Position[];
-  arrayInput: LayoutArray[];
+  arrayInput: Path[];
   title: string;
+  normalize?: boolean;
+  travelOnXaxis?: boolean;
   xLabel?: string;
   yLabel?: string;
 }
 
-const normalizeData = (dataArray: Position[]) => {
+const normalizeData = (dataArray: Position[], travelOnXaxis: boolean, normalize: boolean) => {
+  if (!normalize) {
+    return dataArray;
+  }
+  if (travelOnXaxis) {
+    const x = dataArray[dataArray.length - 1].x;
+    return dataArray.map((point) => {
+      return {x: point.x - x, y: point.y}
+    })
+  }
   const { x, y } = dataArray[dataArray.length - 1];
   return dataArray.map((point) => {
     return { x: point.x - x, y: point.y - y };
   });
 };
 
-const ScatterPlot = ({
+const 
+ScatterPlot = ({
   inputData,
   arrayInput,
   title,
+  normalize = true,
+  travelOnXaxis = false,
 }: ScatterChartProps) => {
+
   
   const data = {
     datasets: [
       {
         label: "Current Iteration",
-        data: normalizeData(inputData),
+        data: normalizeData(inputData, travelOnXaxis, normalize),
         backgroundColor: "red",
       },
       ...arrayInput.map((input) => {
         return {
-          label: input.title,
-          data: normalizeData(input.axlePath.path),
-          backgroundColor: input.axlePath.color,
+          label: input.name,
+          data: normalizeData(input.path, travelOnXaxis, normalize),
+          backgroundColor: input.color,
         };
       }),
     ],

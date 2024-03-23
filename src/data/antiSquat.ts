@@ -1,6 +1,5 @@
 import { DefaultValues } from "../InputForm";
 import { Position } from "./draw";
-import { calculateLengthOfLine } from "./fourBarCalculations";
 
 const rChainRing = 136.1 / 2;
 const rCassette = 168 / 2;
@@ -82,3 +81,12 @@ export const calculateAntiSquatLine = (
 
   return antiSquatHeight;
 };
+
+export const calculateAntiSquat = (centerOfGravity: Position, antiSquatHeight: number[]) => {
+
+  const antiSquat = antiSquatHeight.map((height) => {
+    return height / centerOfGravity.y
+  })
+
+  return antiSquat
+}

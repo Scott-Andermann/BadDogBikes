@@ -6,15 +6,17 @@ import InputForm, { defaultValues, DefaultValues } from "./InputForm";
 import LayoutList from "./LayoutList";
 import ResultsWrapper from "./ResultsWrapper";
 
-export interface AxlePaths {
+export interface Path {
   path: Position[];
   color: string;
+  name: string;
 }
 
 export interface LayoutArray {
   title: string;
   layoutValues: DefaultValues;
-  axlePath: AxlePaths;
+  axlePath: Path;
+  antiSquat: Path;
   id: number;
 }
 
@@ -24,6 +26,8 @@ function App() {
     useState<DefaultValues>(defaultValues);
   const [layoutArray, setLayoutArray] = useState<LayoutArray[]>([]);
   const [axlePath, setAxlePath] = useState<Position[]>([]);
+  const [antiSquat, setAntiSquat] = useState<Position[]>([]);
+  const [updateFromList, setUpdateFromList] = useState<boolean>(false);
 
   useEffect(() => {
     const storedLayouts = localStorage.getItem("BDBLayouts");
@@ -44,7 +48,7 @@ function App() {
       <ConfirmModal
         isOpen={isOpen}
         setLayoutArray={setLayoutArray}
-        layoutObject={{ layoutValues, axlePath }}
+        layoutObject={{ layoutValues, axlePath, antiSquat }}
         onClose={() => setIsOpen(false)}
       />
       <div className="flex flex-row">
@@ -54,11 +58,14 @@ function App() {
             layoutArray={layoutArray}
             axlePath={axlePath}
             setAxlePath={setAxlePath}
+            antiSquat={antiSquat}
+            setAntiSquat={setAntiSquat}
           />
           <InputForm
             setNewValues={setLayoutValues}
             setIsOpen={setIsOpen}
             layoutValues={layoutValues}
+            updateFromList={updateFromList}
           />
         </div>
         <div>
@@ -67,6 +74,7 @@ function App() {
             layoutArray={layoutArray}
             setLayoutArray={setLayoutArray}
             setLayoutValues={setLayoutValues}
+            setUpdateFromList={setUpdateFromList}
           />
         </div>
       </div>

@@ -101,6 +101,7 @@ const Canvas = ({
         >
           Show Charts
         </button>
+        <p>Travel: {Math.round(axlePath[0].y - layoutValues.bbDrop)}</p>
 
       </div>
     </>
