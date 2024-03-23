@@ -100,6 +100,7 @@ const InputForm = ({
         <button
           onClick={() => setIsOpen(true)}
           className="bg-blue-200 border-gray-300 border border-solid rounded-sm p-2"
+          type="button"
         >
           Save Layout
         </button>

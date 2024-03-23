@@ -1,9 +1,8 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
 import Canvas from "./Canvas";
-import calculatedPositions from "./data/calculatedPositions";
 import { Position } from "./data/draw";
-import { calculateAxlePath } from "./data/singlePivotCalculations";
+// import { calculateAxlePath } from "./data/singlePivotCalculations";
 import { DefaultValues } from "./InputForm";
 
 interface LayoutDiagramProps {
@@ -14,9 +13,11 @@ interface LayoutDiagramProps {
   rearPivotPosition: Position[];
   axlePath: Position[];
   setShowLayout: React.Dispatch<React.SetStateAction<boolean>>;
+  antiSquatHeight: number[];
+  IFC: Position[]
 }
 
-const LayoutDiagram = ({ layoutValues, layoutType, shockPosition, seatStayPosition, rearPivotPosition, axlePath, setShowLayout }: LayoutDiagramProps) => {
+const LayoutDiagram = ({ layoutValues, layoutType, shockPosition, seatStayPosition, rearPivotPosition, axlePath, setShowLayout, antiSquatHeight, IFC }: LayoutDiagramProps) => {
   const [key, setKey] = useState(0);
 
   useEffect(() => {
@@ -25,7 +26,7 @@ const LayoutDiagram = ({ layoutValues, layoutType, shockPosition, seatStayPositi
 
   return (
     <>
-      {Array.isArray(axlePath) && axlePath.length > 0 ? (
+      {Array.isArray(axlePath) && axlePath.length > 0 && IFC.length > 0 ? (
         <Canvas
           key={key}
           shockPosition={shockPosition}
@@ -35,6 +36,8 @@ const LayoutDiagram = ({ layoutValues, layoutType, shockPosition, seatStayPositi
           layoutValues={layoutValues}
           humanInput={undefined}
           setShowLayout={setShowLayout}
+          antiSquatHeight={antiSquatHeight}
+          IFC={IFC}
         />
       ) : null}
     </>

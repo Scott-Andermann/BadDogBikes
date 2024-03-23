@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import "./App.css";
 import ConfirmModal from "./ConfirmModal";
 import { Position } from "./data/draw";
-import HumanInputs, { HumanInputProps } from "./HumanInputs";
 import InputForm, { defaultValues, DefaultValues } from "./InputForm";
 import LayoutList from "./LayoutList";
 import ResultsWrapper from "./ResultsWrapper";
@@ -19,17 +18,12 @@ export interface LayoutArray {
   id: number;
 }
 
-const zeroOffset = { x: 500, y: 750 };
-
 function App() {
   const [isOpen, setIsOpen] = useState(false);
   const [layoutValues, setLayoutValues] =
     useState<DefaultValues>(defaultValues);
   const [layoutArray, setLayoutArray] = useState<LayoutArray[]>([]);
-  const [humanInput, setHumanInput] = useState<HumanInputProps | undefined>(
-    undefined
-  );
-  const [key, setKey] = useState(0);
+  const [axlePath, setAxlePath] = useState<Position[]>([]);
 
   useEffect(() => {
     const storedLayouts = localStorage.getItem("BDBLayouts");
@@ -39,33 +33,27 @@ function App() {
     }
   }, []);
 
-  // unmount and remount canvas component
-
   useEffect(() => {
-    console.log("storing data");
     if (layoutArray.length !== 0) {
       localStorage.setItem("BDBLayouts", JSON.stringify(layoutArray));
     }
   }, [layoutArray]);
 
-  console.log("humanInput: ", humanInput);
-
   return (
     <div>
-      {/* <HumanInputs setHumanInput={setHumanInput}/> */}
+      <ConfirmModal
+        isOpen={isOpen}
+        setLayoutArray={setLayoutArray}
+        layoutObject={{ layoutValues, axlePath }}
+        onClose={() => setIsOpen(false)}
+      />
       <div className="flex flex-row">
-        {/* <ConfirmModal
-          isOpen={isOpen}
-          setLayoutArray={setLayoutArray}
-          layoutObject={{
-            layoutValues,
-            axlePath,
-          }}
-          onClose={() => setIsOpen(false)}
-        /> */}
         <div>
           <ResultsWrapper
             layoutValues={layoutValues}
+            layoutArray={layoutArray}
+            axlePath={axlePath}
+            setAxlePath={setAxlePath}
           />
           <InputForm
             setNewValues={setLayoutValues}

@@ -13,6 +13,12 @@ interface DrawFrameProps {
   humanInput: HumanInputProps | undefined;
 }
 
+interface DrawFrontTriangleProps extends DrawFrameProps {
+  antiSquatHeight: number[];
+  step: number;
+  IFC: Position[];
+}
+
 interface DrawProps {
   ctx: CanvasRenderingContext2D;
   step?: number;
@@ -23,6 +29,8 @@ interface DrawProps {
   paused?: boolean;
   pausePosition?: string;
   humanInput?: HumanInputProps;
+  antiSquatHeight?: number[];
+  IFC?: Position[];
 }
 
 interface DrawShockProps extends DrawProps {
@@ -58,6 +66,8 @@ export const draw = ({
   layoutValues,
   paused = false,
   pausePosition = "",
+  antiSquatHeight = [],
+  IFC,
 }: // humanInput,
 DrawMasterProps) => {
   if (paused) {
@@ -72,7 +82,7 @@ DrawMasterProps) => {
   if (step === 0) {
     direction = 1;
   }
-  ctx.clearRect(0, 0, 800, 800);
+  ctx.clearRect(0, 0, 1600, 800);
   ctx.fillStyle = "red";
   ctx.beginPath();
   ctx.arc(zeroOffset.x, zeroOffset.y, 10, 0, 2 * Math.PI);
@@ -119,6 +129,15 @@ DrawMasterProps) => {
   );
   ctx.stroke();
 
+  // instant force center
+  // if (IFC !== undefined) {
+  //   ctx.beginPath();
+  //   ctx.arc(zeroOffset.x - IFC[step].x, zeroOffset.y - IFC[step].y, 20, 0, Math.PI * 2);
+  //   ctx.fillStyle = "blue";
+  //   ctx.fill();
+  //   // ctx.fillStyle = "black";
+  // }
+
   ctx.lineWidth = 1;
   drawShock({
     ctx,
@@ -159,12 +178,17 @@ DrawMasterProps) => {
     zeroOffset,
     humanInput: undefined,
   });
-  drawFork({
-    ctx,
-    layoutValues,
-    zeroOffset,
-    humanInput: undefined,
-  });
+  if (IFC !== undefined) {
+    drawAntiSquat({
+      ctx,
+      layoutValues,
+      zeroOffset,
+      humanInput: undefined,
+      antiSquatHeight,
+      step,
+      IFC,
+    });
+  }
   step += direction;
   if (!paused) {
     setTimeout(() => {
@@ -179,7 +203,10 @@ DrawMasterProps) => {
         seatStayPosition,
         rearPivotPosition,
         axlePath,
+        antiSquatHeight,
+        IFC,
         // humanInput,
+        // IFC,
       });
     }, 17);
   }
@@ -332,14 +359,27 @@ export const drawRearTriangle = ({
   ctx.strokeStyle = "black";
   ctx.lineWidth = 30;
   ctx.beginPath();
-  ctx.arc(
-    zeroOffset.x - rearPivotPosition[step].x,
-    zeroOffset.y - rearPivotPosition[step].y,
-    (29 / 2) * 25.4 - 15,
-    0,
-    2 * Math.PI
-  );
-  ctx.stroke();
+  // Rear Wheel
+  if (layoutValues.layoutType === "singlePivot") {
+    ctx.arc(
+      zeroOffset.x - rearPivotPosition[step].x,
+      zeroOffset.y - rearPivotPosition[step].y,
+      (29 / 2) * 25.4 - 15,
+      0,
+      2 * Math.PI
+    );
+    ctx.stroke();
+  }
+  if (layoutValues.layoutType === "horst") {
+    ctx.arc(
+      zeroOffset.x - axlePath[step].x,
+      zeroOffset.y - axlePath[step].y,
+      (29 / 2) * 25.4 - 15,
+      0,
+      2 * Math.PI
+    );
+    ctx.stroke();
+  }
 
   ctx.lineWidth = 1;
 };
@@ -417,23 +457,22 @@ const drawFrontTriangle = ({
     bottomOfHeadTube.x + layoutValues.forkLength * Math.cos(headTubeAngle),
     bottomOfHeadTube.y + layoutValues.forkLength * Math.sin(headTubeAngle)
   );
-  ctx.lineTo(
-    bottomOfHeadTube.x +
+  const frontAxlePosition = {
+    x:
+      bottomOfHeadTube.x +
       layoutValues.forkLength * Math.cos(headTubeAngle) +
       layoutValues.forkOffset * Math.sin(headTubeAngle),
-    bottomOfHeadTube.y +
+    y:
+      bottomOfHeadTube.y +
       layoutValues.forkLength * Math.sin(headTubeAngle) -
-      layoutValues.forkOffset * Math.cos(headTubeAngle)
-  );
+      layoutValues.forkOffset * Math.cos(headTubeAngle),
+  };
+  ctx.lineTo(frontAxlePosition.x, frontAxlePosition.y);
   ctx.stroke();
   ctx.beginPath();
   ctx.arc(
-    bottomOfHeadTube.x +
-      layoutValues.forkLength * Math.cos(headTubeAngle) +
-      layoutValues.forkOffset * Math.sin(headTubeAngle),
-    bottomOfHeadTube.y +
-      layoutValues.forkLength * Math.sin(headTubeAngle) -
-      layoutValues.forkOffset * Math.cos(headTubeAngle),
+    frontAxlePosition.x,
+    frontAxlePosition.y,
     (29 / 2) * 25.4 - 15,
     0,
     2 * Math.PI
@@ -445,9 +484,14 @@ const drawFrontTriangle = ({
   ctx.lineWidth = 1;
 };
 
-const drawFork = ({ ctx, layoutValues, zeroOffset }: DrawFrameProps) => {
-  ctx.lineWidth = 20;
-  ctx.strokeStyle = "orange";
+const drawAntiSquat = ({
+  ctx,
+  layoutValues,
+  zeroOffset,
+  antiSquatHeight,
+  step,
+  IFC,
+}: DrawFrontTriangleProps) => {
   const headTubeAngle = (layoutValues.headTubeAngle * Math.PI) / 180;
   const bottomOfHeadTube = {
     x:
@@ -460,16 +504,38 @@ const drawFork = ({ ctx, layoutValues, zeroOffset }: DrawFrameProps) => {
       layoutValues.forkLength * Math.sin(headTubeAngle) +
       layoutValues.forkOffset * Math.cos(headTubeAngle),
   };
+
+  const frontAxlePosition = {
+    x:
+      bottomOfHeadTube.x +
+      layoutValues.forkLength * Math.cos(headTubeAngle) +
+      layoutValues.forkOffset * Math.sin(headTubeAngle),
+    y:
+      bottomOfHeadTube.y +
+      layoutValues.forkLength * Math.sin(headTubeAngle) -
+      layoutValues.forkOffset * Math.cos(headTubeAngle),
+  };
+
+  // ctx.beginPath();
+  // ctx.moveTo(zeroOffset.x - IFC[step].x, zeroOffset.y - IFC[step].y);
+  // ctx.lineTo(frontAxlePosition.x, frontAxlePosition.y - antiSquatHeight[step]);
+  // ctx.stroke();
+
+  // draw CG height
   ctx.beginPath();
-  ctx.moveTo(bottomOfHeadTube.x, bottomOfHeadTube.y);
-  ctx.lineTo(
-    bottomOfHeadTube.x + layoutValues.forkLength * Math.cos(headTubeAngle),
-    bottomOfHeadTube.y + layoutValues.forkLength * Math.sin(headTubeAngle)
-  );
+  ctx.moveTo(zeroOffset.x, 80);
+  ctx.lineTo(1600, 80);
   ctx.stroke();
 
-  ctx.lineWidth = 1;
-  ctx.strokeStyle = "black";
+  ctx.beginPath();
+  ctx.arc(
+    frontAxlePosition.x,
+    frontAxlePosition.y - antiSquatHeight[step],
+    5,
+    0,
+    Math.PI * 2
+  );
+  ctx.fill();
 };
 
 export default draw;

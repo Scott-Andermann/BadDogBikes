@@ -6,20 +6,34 @@ import {
   singlePivotAxlePath,
   singlePivotSwingarmLength,
 } from "./data/singlePivotCalculations";
-import Canvas from "./Canvas";
 import LayoutDiagram from "./LayoutDiagram";
 import ScatterPlot from "./ScatterPlot";
 import { calculateRearPivot } from "./data/fourBarCalculations";
-import { horstLinkAxlePath, horstLinkSeatStayLength } from "./data/horstLinkCalculations";
+import {
+  horstLinkAxlePath,
+  horstLinkSeatStayLength,
+} from "./data/horstLinkCalculations";
+import * as React from "react";
+import { LayoutArray } from "./App";
+import { calculateAntiSquatLine, calculateIFC } from "./data/antiSquat";
 
 interface ResultsWrapperProps {
   layoutValues: DefaultValues;
+  layoutArray: LayoutArray[];
+  axlePath: Position[];
+  setAxlePath: React.Dispatch<React.SetStateAction<Position[]>>;
 }
 
-const ResultsWrapper = ({ layoutValues }: ResultsWrapperProps) => {
-  const [axlePath, setAxlePath] = useState<Position[]>();
+const ResultsWrapper = ({
+  layoutValues,
+  layoutArray,
+  axlePath,
+  setAxlePath,
+}: ResultsWrapperProps) => {
   const [showLayout, setShowLayout] = useState(true);
   const [rearPivotPosition, setRearPivotPosition] = useState<Position[]>([]);
+  const [IFC, setIFC] = useState<Position[]>([]);
+  const [antiSquat, setAntiSquat] = useState<number[]>([]);
 
   const {
     shockSteps,
@@ -47,7 +61,10 @@ const ResultsWrapper = ({ layoutValues }: ResultsWrapperProps) => {
       );
     }
     if (layoutValues.layoutType === "horst") {
-      const { seatStayLength, swingarmLength } = horstLinkSeatStayLength(layoutValues, outputAngle);
+      const { seatStayLength, swingarmLength } = horstLinkSeatStayLength(
+        layoutValues,
+        outputAngle
+      );
       const rearPivotPosition = calculateRearPivot(
         layoutValues,
         shockSteps,
@@ -59,17 +76,26 @@ const ResultsWrapper = ({ layoutValues }: ResultsWrapperProps) => {
       );
       setRearPivotPosition(rearPivotPosition);
       setAxlePath(
-        horstLinkAxlePath(layoutValues, seatStayLength, seatStayPosition, rearPivotPosition)
-      );      
+        horstLinkAxlePath(
+          layoutValues,
+          seatStayLength,
+          seatStayPosition,
+          rearPivotPosition
+        )
+      );
     }
   }, [layoutValues.layoutType, layoutValues]);
 
-  // console.log(axlePath);
+  useEffect(() => {
+    setIFC(calculateIFC(layoutValues, axlePath));
+    setAntiSquat(calculateAntiSquatLine(axlePath, layoutValues));
+  }, [layoutValues, axlePath]);
 
+  // console.log(axlePath);
 
   return (
     <div className="relative w-[160vh] h-[80vh]">
-      {showLayout && axlePath !== undefined ? (
+      {showLayout && axlePath !== undefined && IFC !== undefined ? (
         <LayoutDiagram
           layoutValues={layoutValues}
           layoutType="singlePivot"
@@ -78,6 +104,8 @@ const ResultsWrapper = ({ layoutValues }: ResultsWrapperProps) => {
           rearPivotPosition={rearPivotPosition}
           axlePath={axlePath}
           setShowLayout={setShowLayout}
+          antiSquatHeight={antiSquat}
+          IFC={IFC}
         />
       ) : (
         <div className="text-white">
@@ -85,7 +113,7 @@ const ResultsWrapper = ({ layoutValues }: ResultsWrapperProps) => {
             <div className="h-60">
               <ScatterPlot
                 inputData={axlePath}
-                arrayInput={[]}
+                arrayInput={layoutArray}
                 title="Axle Path"
               />
             </div>

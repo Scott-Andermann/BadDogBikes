@@ -12,6 +12,8 @@ interface CanvasProps {
   layoutValues: DefaultValues;
   humanInput: HumanInputProps | undefined;
   setShowLayout: React.Dispatch<React.SetStateAction<boolean>>;
+  antiSquatHeight: number[];
+  IFC: Position[];
 }
 
 const Canvas = ({
@@ -22,10 +24,11 @@ const Canvas = ({
   layoutValues,
   humanInput,
   setShowLayout,
+  antiSquatHeight,
+  IFC
 }: CanvasProps) => {
   const [paused, setPaused] = useState(true);
   const [pausePosition, setPausePosition] = useState("");
-  const [zoomLevel, setZoomLevel] = useState(1);
   const ref = useRef<HTMLCanvasElement>(null);
   const zeroOffset = { x: 500, y: 750 };
 
@@ -51,9 +54,11 @@ const Canvas = ({
         paused,
         pausePosition,
         humanInput,
+        antiSquatHeight,
+        IFC
       });
     }
-  }, [layoutValues, paused, pausePosition]);
+  }, [layoutValues, paused, pausePosition, antiSquatHeight]);
 
   const handleToggleAnimation = () => {
     setPaused(!paused);
