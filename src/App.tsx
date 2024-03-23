@@ -1,24 +1,11 @@
 import { useEffect, useState } from "react";
 import "./App.css";
-import Canvas from "./Canvas";
 import ConfirmModal from "./ConfirmModal";
 import { Position } from "./data/draw";
-import {
-  calculateOutputAngle,
-  calculateSeatStayBellcrankPivot,
-  calculateShockPosition,
-  createShockSteps,
-  calculateRearPivot,
-  calculateSeatStayLength,
-  calculateSwingarmLength,
-  calculateAxlePath,
-} from "./data/fourBarCalculations";
 import HumanInputs, { HumanInputProps } from "./HumanInputs";
 import InputForm, { defaultValues, DefaultValues } from "./InputForm";
-import LayoutDiagram from "./LayoutDiagram";
 import LayoutList from "./LayoutList";
 import ResultsWrapper from "./ResultsWrapper";
-import ScatterPlot from "./ScatterPlot";
 
 export interface AxlePaths {
   path: Position[];
@@ -79,7 +66,6 @@ function App() {
         <div>
           <ResultsWrapper
             layoutValues={layoutValues}
-            layoutType="singlePivot"
           />
           <InputForm
             setNewValues={setLayoutValues}

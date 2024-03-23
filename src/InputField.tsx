@@ -12,7 +12,7 @@ const InputField = ({
   label: string;
   id: string;
   required?: boolean;
-  register: UseFormRegister<DefaultValues> | UseFormRegister<FieldValues>;
+  register: UseFormRegister<DefaultValues>;
   errors: FieldErrors<FieldValues>;
   currentValue?: number;
 }) => {

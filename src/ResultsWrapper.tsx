@@ -2,19 +2,24 @@ import { useState, useEffect } from "react";
 import { Position } from "./data/draw";
 import calculatedPositions from "./data/calculatedPositions";
 import { DefaultValues } from "./InputForm";
-import { calculateAxlePath } from "./data/singlePivotCalculations";
+import {
+  singlePivotAxlePath,
+  singlePivotSwingarmLength,
+} from "./data/singlePivotCalculations";
 import Canvas from "./Canvas";
 import LayoutDiagram from "./LayoutDiagram";
 import ScatterPlot from "./ScatterPlot";
+import { calculateRearPivot } from "./data/fourBarCalculations";
+import { horstLinkAxlePath, horstLinkSeatStayLength } from "./data/horstLinkCalculations";
 
 interface ResultsWrapperProps {
   layoutValues: DefaultValues;
-  layoutType: string;
 }
 
-const ResultsWrapper = ({ layoutValues, layoutType }: ResultsWrapperProps) => {
+const ResultsWrapper = ({ layoutValues }: ResultsWrapperProps) => {
   const [axlePath, setAxlePath] = useState<Position[]>();
   const [showLayout, setShowLayout] = useState(true);
+  const [rearPivotPosition, setRearPivotPosition] = useState<Position[]>([]);
 
   const {
     shockSteps,
@@ -22,17 +27,45 @@ const ResultsWrapper = ({ layoutValues, layoutType }: ResultsWrapperProps) => {
     outputAngle,
     seatStayPosition,
     seatStayLength,
-    swingarmLength,
-    rearPivotPosition,
   } = calculatedPositions(layoutValues);
 
   useEffect(() => {
-    if (layoutType === "singlePivot") {
+    if (layoutValues.layoutType === "singlePivot") {
+      const swingarmLength = singlePivotSwingarmLength(layoutValues);
+      const rearPivotPosition = calculateRearPivot(
+        layoutValues,
+        shockSteps,
+        swingarmLength,
+        shockPosition,
+        outputAngle,
+        seatStayPosition,
+        seatStayLength
+      );
+      setRearPivotPosition(rearPivotPosition);
       setAxlePath(
-        calculateAxlePath(layoutValues, swingarmLength, rearPivotPosition)
+        singlePivotAxlePath(layoutValues, swingarmLength, rearPivotPosition)
       );
     }
-  }, [layoutType, layoutValues]);
+    if (layoutValues.layoutType === "horst") {
+      const { seatStayLength, swingarmLength } = horstLinkSeatStayLength(layoutValues, outputAngle);
+      const rearPivotPosition = calculateRearPivot(
+        layoutValues,
+        shockSteps,
+        swingarmLength,
+        shockPosition,
+        outputAngle,
+        seatStayPosition,
+        seatStayLength
+      );
+      setRearPivotPosition(rearPivotPosition);
+      setAxlePath(
+        horstLinkAxlePath(layoutValues, seatStayLength, seatStayPosition, rearPivotPosition)
+      );      
+    }
+  }, [layoutValues.layoutType, layoutValues]);
+
+  // console.log(axlePath);
+
 
   return (
     <div className="relative w-[160vh] h-[80vh]">

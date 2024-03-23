@@ -300,13 +300,18 @@ export const drawRearTriangle = ({
     zeroOffset.x - rearPivotPosition[step].x,
     zeroOffset.y - rearPivotPosition[step].y
   );
-  ctx.lineTo(zeroOffset.x - axlePath[step].x, zeroOffset.y - axlePath[step].y);
-  ctx.closePath();
+  if (layoutValues.layoutType === "singlePivot") {
+    ctx.lineTo(
+      zeroOffset.x - axlePath[step].x,
+      zeroOffset.y - axlePath[step].y
+    );
+    ctx.closePath();
+  }
   ctx.stroke();
   ctx.fill();
   ctx.fillStyle = "black";
-  ctx.beginPath();
 
+  ctx.beginPath();
   ctx.moveTo(
     zeroOffset.x - rearPivotPosition[step].x,
     zeroOffset.y - rearPivotPosition[step].y
@@ -315,6 +320,13 @@ export const drawRearTriangle = ({
     zeroOffset.x - seatStayPosition[step].x,
     zeroOffset.y - seatStayPosition[step].y
   );
+  if (layoutValues.layoutType === "horst") {
+    ctx.lineTo(
+      zeroOffset.x - axlePath[step].x,
+      zeroOffset.y - axlePath[step].y
+    );
+    ctx.closePath();
+  }
   ctx.strokeStyle = "green";
   ctx.stroke();
   ctx.strokeStyle = "black";
@@ -370,7 +382,7 @@ const drawFrontTriangle = ({
   ctx.lineWidth = 10;
   ctx.lineCap = "round";
   ctx.beginPath();
-  const seatTubeAngle = layoutValues.seatTubeAngle * Math.PI / 180;
+  const seatTubeAngle = (layoutValues.seatTubeAngle * Math.PI) / 180;
   const headTubeAngle = (layoutValues.headTubeAngle * Math.PI) / 180;
   const bottomOfHeadTube = {
     x:
@@ -428,7 +440,7 @@ const drawFrontTriangle = ({
   );
   ctx.lineWidth = 30;
   ctx.strokeStyle = "black";
-  ctx.stroke()
+  ctx.stroke();
 
   ctx.lineWidth = 1;
 };

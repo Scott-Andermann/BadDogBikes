@@ -2,7 +2,26 @@ import { DefaultValues } from "../InputForm";
 import { Position } from "./draw";
 import { calculateLengthOfLine, lawOfCosinesThreeSides } from "./fourBarCalculations";
 
-export const calculateAxlePath = (
+export const singlePivotSwingarmLength = (layoutValues: DefaultValues) => {
+  const thetaAxleChainstay = Math.asin(
+    layoutValues.bbDrop / layoutValues.chainStay
+  );
+  const rearPivotInitialPosition = {
+    x:
+      layoutValues.chainStay * Math.cos(thetaAxleChainstay) -
+      layoutValues.axleOffsetX,
+    y: layoutValues.bbDrop + layoutValues.axleOffsetY,
+  };
+
+  const swingarmLength = Math.sqrt(
+    (layoutValues.swingarmPivotX - rearPivotInitialPosition.x) ** 2 +
+      (layoutValues.swingarmPivotY - rearPivotInitialPosition.y) ** 2
+  );
+
+  return swingarmLength;
+};
+
+export const singlePivotAxlePath = (
   layoutValues: DefaultValues,
   swingarmLength: number,
   rearPivotPosition: Position[]

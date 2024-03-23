@@ -26,6 +26,9 @@ export interface DefaultValues {
   forkOffset: number;
   stack: number;
   reach: number;
+  seatStayOffset: number;
+  rearPivotToAxleLength: number;
+  layoutType: "horst" | "singlePivot";
 }
 
 export const defaultValues: DefaultValues = {
@@ -52,6 +55,9 @@ export const defaultValues: DefaultValues = {
   forkOffset: 44,
   stack: 631,
   reach: 510,
+  seatStayOffset: 10,
+  rearPivotToAxleLength: 20,
+  layoutType: "singlePivot",
 };
 
 const InputForm = ({
@@ -80,14 +86,15 @@ const InputForm = ({
     layoutValues.reach +
     layoutValues.headTubeLength * Math.cos(headTubeAngle) +
     layoutValues.forkLength * Math.cos(headTubeAngle) +
-    Math.cos(Math.asin(layoutValues.bbDrop / layoutValues.chainStay)) * layoutValues.chainStay;
+    Math.cos(Math.asin(layoutValues.bbDrop / layoutValues.chainStay)) *
+      layoutValues.chainStay;
   const stack =
     layoutValues.bbDrop +
     (layoutValues.forkLength + layoutValues.headTubeLength) *
       Math.sin(headTubeAngle);
 
   return (
-    <form onSubmit={handleSubmit((data) => onSubmit(data))}>
+    <form onBlur={handleSubmit((data) => onSubmit(data))}>
       <div className="flex flex-row gap-2">
         <input className={`${inputClasses} max-w-max p-2`} type="submit" />
         <button
@@ -100,6 +107,13 @@ const InputForm = ({
       <div className="flex flex-row gap-2 p-4">
         <div className="flex flex-col gap-1">
           <h3 className="text-gray-100">Bike Geometry</h3>
+          <div className="flex flex-row gap-2 ml-2">
+            <label className="text-sm text-gray-100">Suspension Type</label>
+            <select {...register("layoutType")}>
+              <option value="singlePivot">Single Pivot</option>
+              <option value="horst">Horst Link</option>
+            </select>
+          </div>
           <InputField
             label="Head Tube Angle"
             id="headTubeAngle"
@@ -267,22 +281,46 @@ const InputForm = ({
             errors={errors}
             currentValue={layoutValues.swingarmPivotY}
           />
-          <InputField
-            label="Axle Offset X"
-            id="axleOffsetX"
-            required
-            register={register}
-            errors={errors}
-            currentValue={layoutValues.axleOffsetX}
-          />
-          <InputField
-            label="Axle Offset Y"
-            id="axleOffsetY"
-            required
-            register={register}
-            errors={errors}
-            currentValue={layoutValues.axleOffsetY}
-          />
+          {layoutValues.layoutType === "singlePivot" ? (
+            <>
+              <InputField
+                label="Axle Offset X"
+                id="axleOffsetX"
+                required
+                register={register}
+                errors={errors}
+                currentValue={layoutValues.axleOffsetX}
+              />
+              <InputField
+                label="Axle Offset Y"
+                id="axleOffsetY"
+                required
+                register={register}
+                errors={errors}
+                currentValue={layoutValues.axleOffsetY}
+              />
+            </>
+          ) : null}
+          {layoutValues.layoutType === "horst" ? (
+            <>
+              <InputField
+                label="Seat Stay Offset"
+                id="seatStayOffset"
+                required
+                register={register}
+                errors={errors}
+                currentValue={layoutValues.seatStayOffset}
+              />
+              <InputField
+                label="Rear Pivot to Axle"
+                id="rearPivotToAxleLength"
+                required
+                register={register}
+                errors={errors}
+                currentValue={layoutValues.rearPivotToAxleLength}
+              />
+            </>
+          ) : null}
         </div>
       </div>
     </form>
