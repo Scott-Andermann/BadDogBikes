@@ -146,6 +146,7 @@ const ResultsWrapper = ({
         />
       ) : (
         <div className="text-white">
+          <button onClick={() => setShowLayout(true)}>show layout</button>
           {Array.isArray(axlePath) && axlePath.length > 0 ? (
             <div className="h-60 flex flex-row flex-wrap">
               <ScatterPlot
@@ -176,7 +177,6 @@ const ResultsWrapper = ({
               />
             </div>
           ) : null}
-          <button onClick={() => setShowLayout(true)}>show layout</button>
         </div>
       )}
     </div>

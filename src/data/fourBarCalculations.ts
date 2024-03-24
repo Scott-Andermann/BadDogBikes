@@ -1,11 +1,6 @@
 import { DefaultValues } from "../InputForm";
 import { Position } from "./draw";
 
-export const bellcrankPivot = { x: 12, y: 150 };
-export const bellcrankLengths = { a: 80, b: 100, c: 150 };
-export const shockLength = { max: 185, min: 130 };
-export const shockMount = { x: -55, y: 25 };
-
 export const createShockSteps = (
   layoutValues: DefaultValues,
   steps: number
@@ -59,7 +54,7 @@ export const calculateShockPosition = (
       lawOfCosinesThreeSides({
         a: lengthM,
         b: step,
-        c: bellcrankLengths.a,
+        c: layoutValues.bellcrankA,
       }) + thetaShock;
     return {
       x: shockPositionBC.x + step * Math.cos(alpha),
