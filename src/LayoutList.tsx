@@ -11,8 +11,6 @@ interface LayoutListProps {
 const LayoutList = ({ layoutArray, setLayoutArray, setLayoutValues, setUpdateFromList }: LayoutListProps) => {
 
   const removeLayout = (id: number) => {
-    console.log(id);
-    
     setLayoutArray(prev => prev.filter(layout => layout.id !== id))
   }
 

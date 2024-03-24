@@ -516,10 +516,10 @@ const drawAntiSquat = ({
       layoutValues.forkOffset * Math.cos(headTubeAngle),
   };
 
-  // ctx.beginPath();
-  // ctx.moveTo(zeroOffset.x - IFC[step].x, zeroOffset.y - IFC[step].y);
-  // ctx.lineTo(frontAxlePosition.x, frontAxlePosition.y - antiSquatHeight[step]);
-  // ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(zeroOffset.x - IFC[step].x, zeroOffset.y - IFC[step].y);
+  ctx.lineTo(frontAxlePosition.x, frontAxlePosition.y - antiSquatHeight[step]);
+  ctx.stroke();
 
   // draw CG height
   ctx.beginPath();

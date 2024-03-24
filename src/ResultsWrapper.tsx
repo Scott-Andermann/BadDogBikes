@@ -8,7 +8,7 @@ import {
 } from "./data/singlePivotCalculations";
 import LayoutDiagram from "./LayoutDiagram";
 import ScatterPlot from "./ScatterPlot";
-import { calculateRearPivot } from "./data/fourBarCalculations";
+import { calculateRearPivot, calculateLeverRatio, calculateChainGrowth } from "./data/fourBarCalculations";
 import {
   horstLinkAxlePath,
   horstLinkSeatStayLength,
@@ -25,7 +25,14 @@ interface ResultsWrapperProps {
   setAxlePath: React.Dispatch<React.SetStateAction<Position[]>>;
   antiSquat: Position[];
   setAntiSquat: React.Dispatch<React.SetStateAction<Position[]>>;
+  leverageRatio: Position[];
+  setLeverageRatio: React.Dispatch<React.SetStateAction<Position[]>>;
+  chainGrowth: Position[];
+  setChainGrowth: React.Dispatch<React.SetStateAction<Position[]>>;
 }
+
+const centerOfGravity = {x: 0, y: 650}
+
 
 const ResultsWrapper = ({
   layoutValues,
@@ -34,6 +41,10 @@ const ResultsWrapper = ({
   setAxlePath,
   antiSquat,
   setAntiSquat,
+  leverageRatio,
+  setLeverageRatio,
+  chainGrowth,
+  setChainGrowth
 }: ResultsWrapperProps) => {
   const [showLayout, setShowLayout] = useState(true);
   const [rearPivotPosition, setRearPivotPosition] = useState<Position[]>([]);
@@ -93,16 +104,30 @@ const ResultsWrapper = ({
 
   useEffect(() => {
     setIFC(calculateIFC(layoutValues, axlePath));
-    const antiSquatHeight = calculateAntiSquatLine(axlePath, layoutValues)
+    const antiSquatHeight = calculateAntiSquatLine(axlePath, layoutValues);
     setAntiSquatHeight(antiSquatHeight);
-
-    const antiSquat = calculateAntiSquat({x: 0, y: 600}, antiSquatHeight)
+    const antiSquat = calculateAntiSquat(centerOfGravity, antiSquatHeight);
     const chartData = antiSquat.map((step, index) => {
-      return {x: axlePath[index].y, y: step}
-    })
-    
-    setAntiSquat(chartData)
-    
+      return { x: axlePath[index].y, y: step };
+    });
+
+    setAntiSquat(chartData);
+    if (axlePath.length > 0) {
+      const lever = calculateLeverRatio(
+        axlePath,
+        layoutValues,
+      );
+      const chain = calculateChainGrowth(axlePath);
+      const leverChart = lever.map((ratio, index) => {
+        return { x: axlePath[index].y, y: ratio };
+      });
+      const chainGrowthChart = chain.map((step, index) => {
+        return { x: axlePath[index].y, y: step };
+      })
+      setLeverageRatio(leverChart as Position[]);
+      setChainGrowth(chainGrowthChart);
+
+    }
   }, [layoutValues, axlePath]);
 
   return (
@@ -122,7 +147,7 @@ const ResultsWrapper = ({
       ) : (
         <div className="text-white">
           {Array.isArray(axlePath) && axlePath.length > 0 ? (
-            <div className="h-60">
+            <div className="h-60 flex flex-row flex-wrap">
               <ScatterPlot
                 inputData={axlePath}
                 arrayInput={layoutArray.map((layout) => layout.axlePath)}
@@ -132,6 +157,20 @@ const ResultsWrapper = ({
                 inputData={antiSquat}
                 arrayInput={layoutArray.map((layout) => layout.antiSquat)}
                 title="Anti Squat"
+                normalize={true}
+                travelOnXaxis={true}
+              />
+              <ScatterPlot
+                inputData={leverageRatio}
+                arrayInput={layoutArray.map((layout) => layout.leverageRatio)}
+                title="Leverage Ratio"
+                normalize={true}
+                travelOnXaxis={true}
+              />
+              <ScatterPlot
+                inputData={chainGrowth}
+                arrayInput={layoutArray.map((layout) => layout.chainGrowth)}
+                title="Chain Growth"
                 normalize={true}
                 travelOnXaxis={true}
               />

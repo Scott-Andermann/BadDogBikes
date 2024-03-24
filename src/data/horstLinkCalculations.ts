@@ -59,22 +59,25 @@ export const horstLinkAxlePath = (
   rearPivotPosition: Position[]
 ) => {
   const thetaAB = seatStayPosition.map((position, index) => {
-    return Math.asin((position.x - rearPivotPosition[index].x) / seatStayLength)
-  })
+    return Math.asin(
+      (position.x - rearPivotPosition[index].x) / seatStayLength
+    );
+  });
 
   const axlePosition = thetaAB.map((angle, index) => {
-    // console.log("bellcrank", seatStayPosition[index].x);
-    // console.log("thru rear pivot", (seatStayLength + layoutValues.rearPivotToAxleLength) * Math.sin(angle));
-    // console.log("add offset", layoutValues.seatStayOffset * Math.cos(angle));
-    
-    const position = {
-      x: - (seatStayLength + layoutValues.rearPivotToAxleLength) * Math.sin(angle) - layoutValues.seatStayOffset * Math.cos(angle) + seatStayPosition[index].x,
-      y: - (seatStayLength + layoutValues.rearPivotToAxleLength) * Math.cos(angle) + layoutValues.seatStayOffset * Math.sin(angle) + seatStayPosition[index].y,
-    }
+    const position: Position = {
+      x:
+        -(seatStayLength + layoutValues.rearPivotToAxleLength) *
+          Math.sin(angle) -
+        layoutValues.seatStayOffset * Math.cos(angle) +
+        seatStayPosition[index].x,
+      y:
+        -(seatStayLength + layoutValues.rearPivotToAxleLength) *
+          Math.cos(angle) +
+        layoutValues.seatStayOffset * Math.sin(angle) +
+        seatStayPosition[index].y,
+    };
     return position;
-  })
-  // console.log(axlePosition[axlePosition.length - 1]);
-  
-
+  });
   return axlePosition;
 };

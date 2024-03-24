@@ -17,6 +17,8 @@ export interface LayoutArray {
   layoutValues: DefaultValues;
   axlePath: Path;
   antiSquat: Path;
+  leverageRatio: Path;
+  chainGrowth: Path;
   id: number;
 }
 
@@ -25,8 +27,14 @@ function App() {
   const [layoutValues, setLayoutValues] =
     useState<DefaultValues>(defaultValues);
   const [layoutArray, setLayoutArray] = useState<LayoutArray[]>([]);
+
+  // TODO: Convert these to useReducer
   const [axlePath, setAxlePath] = useState<Position[]>([]);
   const [antiSquat, setAntiSquat] = useState<Position[]>([]);
+  const [leverageRatio, setLeverageRatio] = useState<Position[]>([]);
+  const [chainGrowth, setChainGrowth] = useState<Position[]>([]);
+
+
   const [updateFromList, setUpdateFromList] = useState<boolean>(false);
 
   useEffect(() => {
@@ -48,7 +56,7 @@ function App() {
       <ConfirmModal
         isOpen={isOpen}
         setLayoutArray={setLayoutArray}
-        layoutObject={{ layoutValues, axlePath, antiSquat }}
+        layoutObject={{ layoutValues, axlePath, antiSquat, leverageRatio, chainGrowth }}
         onClose={() => setIsOpen(false)}
       />
       <div className="flex flex-row">
@@ -60,6 +68,10 @@ function App() {
             setAxlePath={setAxlePath}
             antiSquat={antiSquat}
             setAntiSquat={setAntiSquat}
+            leverageRatio={leverageRatio}
+            setLeverageRatio={setLeverageRatio}
+            chainGrowth={chainGrowth}
+            setChainGrowth={setChainGrowth}
           />
           <InputForm
             setNewValues={setLayoutValues}

@@ -54,7 +54,7 @@ export const calculateShockPosition = (
   };
   const lengthM = Math.sqrt(shockPositionBC.x ** 2 + shockPositionBC.y ** 2);
   const thetaShock = Math.atan(shockPositionBC.y / shockPositionBC.x);
-  const shockPosition = shockSteps.map((step) => {
+  const shockPosition: Position[] = shockSteps.map((step) => {
     const alpha =
       lawOfCosinesThreeSides({
         a: lengthM,
@@ -83,10 +83,13 @@ export const calculateOutputAngle = (
     b: layoutValues.bellcrankB,
     c: layoutValues.bellcrankC,
   });
-  
+
   const outputAngle = shockPosition.map((step) => {
     if (step.y < 0) {
-      return Math.PI - (-1 * Math.atan(Math.abs(step.y / step.x)) + bellcrankFixedAngle)
+      return (
+        Math.PI -
+        (-1 * Math.atan(Math.abs(step.y / step.x)) + bellcrankFixedAngle)
+      );
     }
     return (
       Math.PI - (Math.atan(Math.abs(step.y / step.x)) + bellcrankFixedAngle)
@@ -250,7 +253,7 @@ export const calculateRearPivot = (
         }),
     };
   });
-  
+
   const rearPivotPosition = angles.map((angle) => {
     const sumAngles = thetaFrame + angle.alpha + angle.beta;
 
@@ -270,76 +273,31 @@ export const calculateLengthOfLine = (a: Position, b: Position) => {
   return Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2);
 };
 
-// export const calculateAxlePath = (
-//   layoutValues: DefaultValues,
-//   shockSteps: number[],
-//   swingarmLength: number,
-//   shockPosition?: Position[],
-//   outputAngle?: number[],
-//   seatStayBellcrankPosition?: Position[],
-//   seatStayLength?: number,
-//   rearPivotPosition?: Position[]
-// ) => {
-//   if (shockPosition === undefined) {
-//     shockPosition = calculateShockPosition(layoutValues, shockSteps);
-//   }
-//   if (outputAngle === undefined) {
-//     outputAngle = calculateOutputAngle(layoutValues, shockSteps, shockPosition);
-//   }
-//   if (seatStayBellcrankPosition === undefined) {
-//     seatStayBellcrankPosition = calculateSeatStayBellcrankPivot(
-//       layoutValues,
-//       shockSteps,
-//       shockPosition,
-//       outputAngle
-//     );
-//   }
-//   if (seatStayLength === undefined) {
-//     seatStayLength = calculateSeatStayLength(
-//       layoutValues,
-//       shockSteps,
-//       shockPosition,
-//       outputAngle
-//     );
-//   }
-//   if (rearPivotPosition === undefined) {
-//     rearPivotPosition = calculateRearPivot(
-//       layoutValues,
-//       shockSteps,
-//       swingarmLength,
-//       shockPosition,
-//       outputAngle,
-//       seatStayBellcrankPosition,
-//       seatStayLength
-//     );
-//   }
+export const calculateLeverRatio = (
+  axlePath: Position[],
+  layoutValues: DefaultValues
+) => {
+  const shockTravelStep = (layoutValues.shockMax - layoutValues.shockMin) / 60;
+  const leverageRatio = axlePath.map((_, index) => {
+    if (index < axlePath.length - 1) {
+      const wheelTravel = axlePath[index].y - axlePath[index + 1].y;
+      return wheelTravel / shockTravelStep;
+    }
+  });
+  return leverageRatio.slice(0, -1);
+};
 
-//   const lengthToAxle = calculateLengthOfLine(
-//     { x: layoutValues.swingarmPivotX, y: layoutValues.swingarmPivotY },
-//     {
-//       x:
-//         rearPivotPosition[rearPivotPosition.length - 1].x +
-//         layoutValues.axleOffsetX,
-//       y: layoutValues.bbDrop,
-//     }
-//   );
-//   const thetaInSwingarm = lawOfCosinesThreeSides({
-//     a: swingarmLength,
-//     b: lengthToAxle,
-//     c: Math.sqrt(layoutValues.axleOffsetX ** 2 + layoutValues.axleOffsetY ** 2),
-//   });
-//   const axlePosition = rearPivotPosition.map((point) => {
-//     const alpha = Math.atan(
-//       (point.y - layoutValues.swingarmPivotY) /
-//         (point.x - layoutValues.swingarmPivotX)
-//     );
-//     const totalAngle = alpha - thetaInSwingarm;
+export const calculateChainGrowth = (axlePath: Position[]) => {
+  const fullExtensionChainLength = calculateLengthOfLine(
+    { x: 0, y: 0 },
+    axlePath[axlePath.length - 1]
+  );
 
-//     return {
-//       x: layoutValues.swingarmPivotX + lengthToAxle * Math.cos(totalAngle),
-//       y: layoutValues.swingarmPivotY + lengthToAxle * Math.sin(totalAngle),
-//     };
-//   });
+  const chainGrowth = axlePath.map((step) => {
+    return (
+      calculateLengthOfLine({ x: 0, y: 0 }, step) - fullExtensionChainLength
+    );
+  });
 
-//   return axlePosition;
-// };
+  return chainGrowth;
+};
