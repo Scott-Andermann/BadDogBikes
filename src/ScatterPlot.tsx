@@ -8,10 +8,10 @@ import {
   Tooltip,
   Legend,
   Colors,
-} from "chart.js";
-import { Scatter } from "react-chartjs-2";
-import { Position } from "./data/draw";
-import { Path } from "./App";
+} from 'chart.js';
+import { Scatter } from 'react-chartjs-2';
+import { Position } from './data/draw';
+import { Path } from './App';
 
 ChartJS.register(
   CategoryScale,
@@ -24,9 +24,13 @@ ChartJS.register(
   Colors
 );
 
+interface PathWithColor extends Path {
+  color: string;
+}
+
 interface ScatterChartProps {
   inputData: Position[];
-  arrayInput: Path[];
+  arrayInput: PathWithColor[];
   title: string;
   normalize?: boolean;
   travelOnXaxis?: boolean;
@@ -34,15 +38,19 @@ interface ScatterChartProps {
   yLabel?: string;
 }
 
-const normalizeData = (dataArray: Position[], travelOnXaxis: boolean, normalize: boolean) => {
+const normalizeData = (
+  dataArray: Position[],
+  travelOnXaxis: boolean,
+  normalize: boolean
+) => {
   if (!normalize) {
     return dataArray;
   }
   if (travelOnXaxis) {
     const x = dataArray[dataArray.length - 1].x;
     return dataArray.map((point) => {
-      return {x: point.x - x, y: point.y}
-    })
+      return { x: point.x - x, y: point.y };
+    });
   }
   const { x, y } = dataArray[dataArray.length - 1];
   return dataArray.map((point) => {
@@ -50,8 +58,7 @@ const normalizeData = (dataArray: Position[], travelOnXaxis: boolean, normalize:
   });
 };
 
-const 
-ScatterPlot = ({
+const ScatterPlot = ({
   inputData,
   arrayInput,
   title,
@@ -59,13 +66,14 @@ ScatterPlot = ({
   travelOnXaxis = false,
 }: ScatterChartProps) => {
 
+  console.log(arrayInput);
   
   const data = {
     datasets: [
       {
-        label: "Current Iteration",
+        label: 'Current Iteration',
         data: normalizeData(inputData, travelOnXaxis, normalize),
-        backgroundColor: "red",
+        backgroundColor: 'red',
       },
       ...arrayInput.map((input) => {
         return {
@@ -81,7 +89,7 @@ ScatterPlot = ({
     responsive: true,
     plugins: {
       legend: {
-        position: "top" as const,
+        position: 'top' as const,
       },
       title: {
         display: true,

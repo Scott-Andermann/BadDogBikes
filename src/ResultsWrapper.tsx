@@ -151,26 +151,26 @@ const ResultsWrapper = ({
             <div className="h-60 flex flex-row flex-wrap">
               <ScatterPlot
                 inputData={axlePath}
-                arrayInput={layoutArray.map((layout) => layout.axlePath)}
+                arrayInput={layoutArray.map((layout) => ({ ...layout.axlePath, color: layout.color }))}
                 title="Axle Path"
               />
               <ScatterPlot
                 inputData={antiSquat}
-                arrayInput={layoutArray.map((layout) => layout.antiSquat)}
+                arrayInput={layoutArray.map((layout) => ({...layout.antiSquat, color: layout.color}))}
                 title="Anti Squat"
                 normalize={true}
                 travelOnXaxis={true}
               />
               <ScatterPlot
                 inputData={leverageRatio}
-                arrayInput={layoutArray.map((layout) => layout.leverageRatio)}
+                arrayInput={layoutArray.map((layout) => ({...layout.leverageRatio, color: layout.color}))}
                 title="Leverage Ratio"
                 normalize={true}
                 travelOnXaxis={true}
               />
               <ScatterPlot
                 inputData={chainGrowth}
-                arrayInput={layoutArray.map((layout) => layout.chainGrowth)}
+                arrayInput={layoutArray.map((layout) => ({...layout.chainGrowth, color: layout.color}))}
                 title="Chain Growth"
                 normalize={true}
                 travelOnXaxis={true}

@@ -44,11 +44,12 @@ const ConfirmModal = ({
       ...prev,
       {
         layoutValues: layoutObject.layoutValues,
-        axlePath: { path: layoutObject.axlePath, color: color, name: title },
-        antiSquat: { path: layoutObject.antiSquat, color: color, name: title },
-        leverageRatio: { path: layoutObject.leverageRatio, color: color, name: title },
-        chainGrowth: { path: layoutObject.chainGrowth, color: color, name: title },
+        axlePath: { path: layoutObject.axlePath, name: title },
+        antiSquat: { path: layoutObject.antiSquat, name: title },
+        leverageRatio: { path: layoutObject.leverageRatio, name: title },
+        chainGrowth: { path: layoutObject.chainGrowth, name: title },
         title,
+        color,
         id: Math.random() * 10000,
       },
     ]});

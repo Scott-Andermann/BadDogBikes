@@ -1,14 +1,14 @@
-import { useEffect, useState } from "react";
-import "./App.css";
-import ConfirmModal from "./ConfirmModal";
-import { Position } from "./data/draw";
-import InputForm, { defaultValues, DefaultValues } from "./InputForm";
-import LayoutList from "./LayoutList";
-import ResultsWrapper from "./ResultsWrapper";
+import { useEffect, useState } from 'react';
+import './App.css';
+import ConfirmModal from './ConfirmModal';
+import { Position } from './data/draw';
+import InputForm, { defaultValues, DefaultValues } from './InputForm';
+import LayoutList from './LayoutList';
+import ResultsWrapper from './ResultsWrapper';
+import { DarkThemeToggle, Flowbite } from 'flowbite-react';
 
 export interface Path {
   path: Position[];
-  color: string;
   name: string;
 }
 
@@ -19,6 +19,7 @@ export interface LayoutArray {
   antiSquat: Path;
   leverageRatio: Path;
   chainGrowth: Path;
+  color: string;
   id: number;
 }
 
@@ -34,11 +35,11 @@ function App() {
   const [leverageRatio, setLeverageRatio] = useState<Position[]>([]);
   const [chainGrowth, setChainGrowth] = useState<Position[]>([]);
 
-
-  const [updateFromList, setUpdateFromList] = useState<boolean>(false);
+  const [updateFromList, setUpdateFromList] =
+    useState<boolean>(false);
 
   useEffect(() => {
-    const storedLayouts = localStorage.getItem("BDBLayouts");
+    const storedLayouts = localStorage.getItem('BDBLayouts');
 
     if (storedLayouts !== null) {
       setLayoutArray(JSON.parse(storedLayouts));
@@ -47,16 +48,23 @@ function App() {
 
   useEffect(() => {
     if (layoutArray.length !== 0) {
-      localStorage.setItem("BDBLayouts", JSON.stringify(layoutArray));
+      localStorage.setItem('BDBLayouts', JSON.stringify(layoutArray));
     }
   }, [layoutArray]);
 
   return (
-    <div>
+    <Flowbite>
+      <DarkThemeToggle />
       <ConfirmModal
         isOpen={isOpen}
         setLayoutArray={setLayoutArray}
-        layoutObject={{ layoutValues, axlePath, antiSquat, leverageRatio, chainGrowth }}
+        layoutObject={{
+          layoutValues,
+          axlePath,
+          antiSquat,
+          leverageRatio,
+          chainGrowth,
+        }}
         onClose={() => setIsOpen(false)}
       />
       <div className="flex flex-row">
@@ -81,7 +89,6 @@ function App() {
           />
         </div>
         <div>
-          <h2 className="text-gray-100">Iterations</h2>
           <LayoutList
             layoutArray={layoutArray}
             setLayoutArray={setLayoutArray}
@@ -90,7 +97,7 @@ function App() {
           />
         </div>
       </div>
-    </div>
+    </Flowbite>
   );
 }
 
