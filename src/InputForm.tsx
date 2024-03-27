@@ -1,6 +1,6 @@
-import { SetStateAction, useEffect } from "react";
-import { useForm } from "react-hook-form";
-import InputField from "./InputField";
+import { SetStateAction, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import InputField from './InputField';
 
 export interface DefaultValues {
   bellcrankX: number;
@@ -28,7 +28,7 @@ export interface DefaultValues {
   reach: number;
   seatStayOffset: number;
   rearPivotToAxleLength: number;
-  layoutType: "horst" | "singlePivot";
+  layoutType: 'horst' | 'singlePivot';
 }
 
 export const defaultValues: DefaultValues = {
@@ -57,7 +57,7 @@ export const defaultValues: DefaultValues = {
   reach: 510,
   seatStayOffset: 10,
   rearPivotToAxleLength: 20,
-  layoutType: "singlePivot",
+  layoutType: 'singlePivot',
 };
 
 const InputForm = ({
@@ -78,7 +78,7 @@ const InputForm = ({
     reset,
   } = useForm({ defaultValues: defaultValues });
   const inputClasses =
-    "border border-solid border-gray-300 rounded-sm bg-blue-200";
+    'border border-solid border-gray-300 rounded-sm bg-blue-200';
 
   const onSubmit = (data: DefaultValues) => {
     setNewValues(data);
@@ -90,22 +90,16 @@ const InputForm = ({
 
   return (
     <form onBlur={handleSubmit((data) => onSubmit(data))}>
-      <div className="flex flex-row gap-2">
-        <input className={`${inputClasses} max-w-max p-2`} type="submit" />
-        <button
-          onClick={() => setIsOpen(true)}
-          className="bg-blue-200 border-gray-300 border border-solid rounded-sm p-2"
-          type="button"
-        >
-          Save Layout
-        </button>
-      </div>
       <div className="flex flex-row gap-2 p-4">
         <div className="flex flex-col gap-1">
-          <h3 className="text-gray-100">Bike Geometry</h3>
-          <div className="flex flex-row gap-2 ml-2">
-            <label className="text-sm text-gray-100">Suspension Type</label>
-            <select {...register("layoutType")}>
+          <h2 className="text-gray-100 text-xl font-bold">
+            Geometry Inputs
+          </h2>
+          <div className="flex flex-row gap-2 ml-2 justify-between">
+            <label className="text-sm text-gray-100">
+              Linkage Type
+            </label>
+            <select {...register('layoutType')} className="p-0">
               <option value="singlePivot">Single Pivot</option>
               <option value="horst">Horst Link</option>
             </select>
@@ -174,8 +168,6 @@ const InputForm = ({
             errors={errors}
             currentValue={layoutValues.chainStay}
           />
-        </div>
-        <div className="flex flex-col gap-1">
           <h3 className="text-gray-100">Bellcrank Position</h3>
           <InputField
             label="Bellcrank X"
@@ -218,8 +210,6 @@ const InputForm = ({
             errors={errors}
             currentValue={layoutValues.bellcrankC}
           />
-        </div>
-        <div className="flex flex-col gap-1">
           <h3 className="text-gray-100">Shock Mount Position</h3>
           <InputField
             label="Shock X"
@@ -254,8 +244,6 @@ const InputForm = ({
             errors={errors}
             currentValue={layoutValues.shockMax}
           />
-        </div>
-        <div className="flex flex-col gap-1">
           <h3 className="text-gray-100">Rear Triangle Geometry</h3>
           <InputField
             label="Swingarm Pivot X"
@@ -273,7 +261,7 @@ const InputForm = ({
             errors={errors}
             currentValue={layoutValues.swingarmPivotY}
           />
-          {layoutValues.layoutType === "singlePivot" ? (
+          {layoutValues.layoutType === 'singlePivot' ? (
             <>
               <InputField
                 label="Axle Offset X"
@@ -293,7 +281,7 @@ const InputForm = ({
               />
             </>
           ) : null}
-          {layoutValues.layoutType === "horst" ? (
+          {layoutValues.layoutType === 'horst' ? (
             <>
               <InputField
                 label="Seat Stay Offset"
@@ -313,6 +301,19 @@ const InputForm = ({
               />
             </>
           ) : null}
+          <div className="flex flex-row gap-2">
+            <input
+              className={`${inputClasses} max-w-max p-2`}
+              type="submit"
+            />
+            <button
+              onClick={() => setIsOpen(true)}
+              className="bg-blue-200 border-gray-300 border border-solid rounded-sm p-2"
+              type="button"
+            >
+              Save Layout
+            </button>
+          </div>
         </div>
       </div>
     </form>

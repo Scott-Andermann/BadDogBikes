@@ -8,7 +8,7 @@ import {
 } from "./data/singlePivotCalculations";
 import LayoutDiagram from "./LayoutDiagram";
 import ScatterPlot from "./ScatterPlot";
-import { calculateRearPivot, calculateLeverRatio, calculateChainGrowth } from "./data/fourBarCalculations";
+import { calculateRearPivot, calculateLeverRatio, calculateChainGrowth, calculateSeatStayLength } from "./data/fourBarCalculations";
 import {
   horstLinkAxlePath,
   horstLinkSeatStayLength,
@@ -56,12 +56,17 @@ const ResultsWrapper = ({
     shockPosition,
     outputAngle,
     seatStayPosition,
-    seatStayLength,
   } = calculatedPositions(layoutValues);
 
   useEffect(() => {
     if (layoutValues.layoutType === "singlePivot") {
       const swingarmLength = singlePivotSwingarmLength(layoutValues);
+      const seatStayLength = calculateSeatStayLength(
+        layoutValues,
+        shockSteps,
+        shockPosition,
+        outputAngle
+      );
       const rearPivotPosition = calculateRearPivot(
         layoutValues,
         shockSteps,
@@ -77,10 +82,11 @@ const ResultsWrapper = ({
       );
     }
     if (layoutValues.layoutType === "horst") {
-      const { seatStayLength, swingarmLength } = horstLinkSeatStayLength(
+      const { seatStayLength, swingarmLength, thetaInSeatStay, lAC } = horstLinkSeatStayLength(
         layoutValues,
         outputAngle
       );
+      
       const rearPivotPosition = calculateRearPivot(
         layoutValues,
         shockSteps,
@@ -88,15 +94,16 @@ const ResultsWrapper = ({
         shockPosition,
         outputAngle,
         seatStayPosition,
-        seatStayLength
+        seatStayLength,
       );
       setRearPivotPosition(rearPivotPosition);
       setAxlePath(
         horstLinkAxlePath(
-          layoutValues,
           seatStayLength,
           seatStayPosition,
-          rearPivotPosition
+          rearPivotPosition,
+          thetaInSeatStay,
+          lAC,
         )
       );
     }

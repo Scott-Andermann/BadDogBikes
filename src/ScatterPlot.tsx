@@ -66,8 +66,6 @@ const ScatterPlot = ({
   travelOnXaxis = false,
 }: ScatterChartProps) => {
 
-  console.log(arrayInput);
-  
   const data = {
     datasets: [
       {

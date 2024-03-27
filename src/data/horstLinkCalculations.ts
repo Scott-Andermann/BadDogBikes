@@ -2,7 +2,6 @@ import { DefaultValues } from "../InputForm";
 import { Position } from "./draw";
 import {
   calculateLengthOfLine,
-  lawOfCosinesThreeSides,
 } from "./fourBarCalculations";
 
 export const horstLinkSeatStayLength = (
@@ -24,16 +23,12 @@ export const horstLinkSeatStayLength = (
       Math.cos(Math.asin(layoutValues.bbDrop / layoutValues.chainStay)),
     y: layoutValues.bbDrop,
   };
-
   const lAC = calculateLengthOfLine(
     bellcrankInitialPosition,
     axleInitialPosition
   );
-  const thetaInSeatStay = Math.asin(layoutValues.seatStayOffset / lAC);
-
-  const seatStayLength =
-    lAC * Math.cos(thetaInSeatStay) - layoutValues.rearPivotToAxleLength;
-
+  const thetaInSeatStay = Math.atan((layoutValues.seatStayOffset) / (lAC - layoutValues.rearPivotToAxleLength));
+  const seatStayLength = Math.sqrt(layoutValues.seatStayOffset ** 2 + (lAC - layoutValues.rearPivotToAxleLength) ** 2);
   const thetaAB =
     Math.asin((bellcrankInitialPosition.x - axleInitialPosition.x) / lAC) -
     thetaInSeatStay;
@@ -42,22 +37,20 @@ export const horstLinkSeatStayLength = (
     x: bellcrankInitialPosition.x - seatStayLength * Math.sin(thetaAB),
     y: bellcrankInitialPosition.y - seatStayLength * Math.cos(thetaAB),
   };
-  console.log(rearPivotInitialPosition);
 
-  const swingarmLength = calculateLengthOfLine(rearPivotInitialPosition, {
-    x: layoutValues.swingarmPivotX,
-    y: layoutValues.swingarmPivotY,
-  });
+  
 
-  return { seatStayLength, swingarmLength };
+  return { seatStayLength, swingarmLength, thetaInSeatStay, lAC };
 };
 
 export const horstLinkAxlePath = (
-  layoutValues: DefaultValues,
   seatStayLength: number,
   seatStayPosition: Position[],
-  rearPivotPosition: Position[]
+  rearPivotPosition: Position[],
+  thetaInSeatStay: number,
+  lAC: number,
 ) => {
+  
   const thetaAB = seatStayPosition.map((position, index) => {
     return Math.asin(
       (position.x - rearPivotPosition[index].x) / seatStayLength
@@ -66,18 +59,17 @@ export const horstLinkAxlePath = (
 
   const axlePosition = thetaAB.map((angle, index) => {
     const position: Position = {
-      x:
-        -(seatStayLength + layoutValues.rearPivotToAxleLength) *
-          Math.sin(angle) -
-        layoutValues.seatStayOffset * Math.cos(angle) +
-        seatStayPosition[index].x,
-      y:
-        -(seatStayLength + layoutValues.rearPivotToAxleLength) *
-          Math.cos(angle) +
-        layoutValues.seatStayOffset * Math.sin(angle) +
-        seatStayPosition[index].y,
+      
+      x: - lAC * Math.sin(angle + thetaInSeatStay) + seatStayPosition[index].x,
+      y: - lAC * Math.cos(angle + thetaInSeatStay) + seatStayPosition[index].y,
     };
     return position;
   });
+
+  // console.log(axlePosition);
+  
+  
+
+  
   return axlePosition;
 };

@@ -81,19 +81,20 @@ function App() {
             chainGrowth={chainGrowth}
             setChainGrowth={setChainGrowth}
           />
-          <InputForm
-            setNewValues={setLayoutValues}
-            setIsOpen={setIsOpen}
-            layoutValues={layoutValues}
-            updateFromList={updateFromList}
-          />
-        </div>
-        <div>
           <LayoutList
             layoutArray={layoutArray}
             setLayoutArray={setLayoutArray}
             setLayoutValues={setLayoutValues}
             setUpdateFromList={setUpdateFromList}
+          />
+
+        </div>
+        <div>
+        <InputForm
+            setNewValues={setLayoutValues}
+            setIsOpen={setIsOpen}
+            layoutValues={layoutValues}
+            updateFromList={updateFromList}
           />
         </div>
       </div>

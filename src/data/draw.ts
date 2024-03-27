@@ -1,5 +1,6 @@
 import { HumanInputProps } from "../HumanInputs";
 import { DefaultValues } from "../InputForm";
+import { calculateLengthOfLine } from "./fourBarCalculations";
 
 export interface Position {
   x: number;
@@ -101,6 +102,10 @@ DrawMasterProps) => {
   ctx.beginPath();
   ctx.moveTo(zeroOffset.x, zeroOffset.y - 20);
   ctx.lineTo(0, zeroOffset.y - 20);
+  ctx.stroke();
+  
+  ctx.beginPath();
+  ctx.arc(zeroOffset.x - axlePath[axlePath.length - 1].x, zeroOffset.y - axlePath[axlePath.length - 1].y, calculateLengthOfLine(rearPivotPosition[rearPivotPosition.length - 1], axlePath[axlePath.length -1]), 0, 2 * Math.PI);
   ctx.stroke();
 
   //chainstay

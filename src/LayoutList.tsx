@@ -38,7 +38,6 @@ const LayoutList = ({
   };
 
   const updateColor = (e: string, id: number) => {
-    console.log(e, id);
     setLayoutArray((prev) =>
       prev.map((layout) =>
         layout.id === id ? { ...layout, color: e } : layout
@@ -61,7 +60,7 @@ const LayoutList = ({
   const headingStyles = 'px-6 py-4';
 
   return (
-    <div className="relative shadow-md m-4 rounded-lg">
+    <div className="relative shadow-md rounded-lg">
       <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 sm:rounded-lg">
         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 sm:rounded-lg overflow-hidden">
           <tr className="rounded-lg">
