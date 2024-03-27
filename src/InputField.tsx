@@ -17,7 +17,7 @@ const InputField = ({
   currentValue?: number;
 }) => {
   const inputClasses =
-    "border border-solid border-gray-300 rounded-sm w-20 text-xs";
+    "border border-solid border-gray-300 rounded-sm w-20 text-xs p-0";
   const labelClasses = "ml-2 whitespace-nowrap text-sm mr-2 text-gray-100";
   return (
     <div className="flex flex-col gap-1">

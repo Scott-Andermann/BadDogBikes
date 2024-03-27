@@ -83,18 +83,6 @@ const InputForm = ({
   const onSubmit = (data: DefaultValues) => {
     setNewValues(data);
   };
-  const headTubeAngle = (layoutValues.headTubeAngle * Math.PI) / 180;
-
-  const wheelbase =
-    layoutValues.reach +
-    layoutValues.headTubeLength * Math.cos(headTubeAngle) +
-    layoutValues.forkLength * Math.cos(headTubeAngle) +
-    Math.cos(Math.asin(layoutValues.bbDrop / layoutValues.chainStay)) *
-      layoutValues.chainStay;
-  const stack =
-    layoutValues.bbDrop +
-    (layoutValues.forkLength + layoutValues.headTubeLength) *
-      Math.sin(headTubeAngle);
 
   useEffect(() => {
     reset(layoutValues);
@@ -186,10 +174,6 @@ const InputForm = ({
             errors={errors}
             currentValue={layoutValues.chainStay}
           />
-          <p className="text-gray-100">
-            Stack Height: {Math.abs(Math.round(stack))}
-          </p>
-          <p className="text-gray-100">Wheelbase: {Math.round(wheelbase)}</p>
         </div>
         <div className="flex flex-col gap-1">
           <h3 className="text-gray-100">Bellcrank Position</h3>

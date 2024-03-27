@@ -3,6 +3,7 @@ import { HexColorPicker } from 'react-colorful';
 import { LayoutArray } from './App';
 import { DefaultValues } from './InputForm';
 import { Button, Popover } from 'flowbite-react';
+import GeometryTable from './GeometryTable';
 
 interface LayoutListProps {
   layoutArray: LayoutArray[];
@@ -36,14 +37,35 @@ const LayoutList = ({
     setUpdateFromList((prev) => !prev);
   };
 
+  const updateColor = (e: string, id: number) => {
+    console.log(e, id);
+    setLayoutArray((prev) =>
+      prev.map((layout) =>
+        layout.id === id ? { ...layout, color: e } : layout
+      )
+    );
+  };
+
+  const wheelbase = (layout: DefaultValues) => {
+    const headTubeAngle = (layout.headTubeAngle * Math.PI) / 180;
+    return (
+      layout.reach +
+      layout.headTubeLength * Math.cos(headTubeAngle) +
+      layout.forkLength * Math.cos(headTubeAngle) +
+      Math.cos(Math.asin(layout.bbDrop / layout.chainStay)) *
+        layout.chainStay
+    );
+  };
+
   const bodyStyles = 'px-6 py-4';
   const headingStyles = 'px-6 py-4';
 
   return (
-    <div className="relative overflow-x-auto shadow-md sm:rounded-lg m-4">
-      <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-        <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-          <tr>
+    <div className="relative shadow-md m-4 rounded-lg">
+      <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 sm:rounded-lg">
+        <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 sm:rounded-lg overflow-hidden">
+          <tr className="rounded-lg">
+            <th scope="col" className={headingStyles}></th>
             <th scope="col" className={headingStyles}>
               Name
             </th>
@@ -57,7 +79,10 @@ const LayoutList = ({
               Progressiveness
             </th>
             <th scope="col" className={headingStyles}>
-              Color
+              Wheelbase
+            </th>
+            <th scope="col" className={headingStyles}>
+              Stack Height
             </th>
             <th scope="col" className={headingStyles}></th>
             <th scope="col" className={headingStyles}></th>
@@ -81,6 +106,38 @@ const LayoutList = ({
                     className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                     key={layout.id}
                   >
+                    <td className={`relative ${bodyStyles}`}>
+                      <Popover
+                        aria-labelledby="default-popover"
+                        content={
+                          <div className="w-64 text-sm text-gray-500 dark:text-gray-400">
+                            <div className="border-b border-gray-200 bg-gray-100 px-3 py-2 dark:border-gray-600 dark:bg-gray-700">
+                              <h3
+                                id="default-popover"
+                                className="font-semibold text-gray-900 dark:text-white"
+                              >
+                                Choose Color
+                              </h3>
+                            </div>
+                            <div className="px-3 py-2">
+                              <HexColorPicker
+                                color={layout.color}
+                                onChange={(e) =>
+                                  updateColor(e, layout.id)
+                                }
+                              />
+                            </div>
+                          </div>
+                        }
+                      >
+                        <Button
+                          pill
+                          style={{ backgroundColor: layout.color }}
+                        >
+                          {''}
+                        </Button>
+                      </Popover>
+                    </td>
                     <th
                       scope="row"
                       className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
@@ -96,7 +153,10 @@ const LayoutList = ({
                     <td className={bodyStyles}>
                       {Math.round(progressiveness * 1000) / 10}
                     </td>
-                    <td className={`relative ${bodyStyles}`}>
+                    <td className={bodyStyles}>
+                      {Math.round(wheelbase(layout.layoutValues))}
+                    </td>
+                    <td>
                       <Popover
                         aria-labelledby="default-popover"
                         content={
@@ -106,19 +166,16 @@ const LayoutList = ({
                                 id="default-popover"
                                 className="font-semibold text-gray-900 dark:text-white"
                               >
-                                Popover title
+                                Geometry
                               </h3>
                             </div>
                             <div className="px-3 py-2">
-                              <p>
-                                And here's some amazing content. It's
-                                very engaging. Right?
-                              </p>
+                              <GeometryTable layoutValues={layout.layoutValues} wheelbase={wheelbase(layout.layoutValues)}/>
                             </div>
                           </div>
                         }
                       >
-                        <Button>Default popover</Button>
+                        <Button>Geometry</Button>
                       </Popover>
                     </td>
                     <td className={bodyStyles}>
