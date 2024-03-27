@@ -83,11 +83,18 @@ DrawMasterProps) => {
   if (step === 0) {
     direction = 1;
   }
+
+  // Bottom Bracket
   ctx.clearRect(0, 0, 1600, 800);
   ctx.fillStyle = "red";
   ctx.beginPath();
   ctx.arc(zeroOffset.x, zeroOffset.y, 1.5 * 25.4 / 2, 0, 2 * Math.PI);
   ctx.fill();
+
+  // chainring
+  ctx.beginPath();
+  ctx.arc(zeroOffset.x, zeroOffset.y, 136 / 2, 0, 2 * Math.PI);
+  ctx.stroke();
 
   ctx.fillStyle = "blue";
   ctx.beginPath();

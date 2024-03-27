@@ -1,5 +1,6 @@
 import { DefaultValues } from "../InputForm";
 import { Position } from "./draw";
+import { intersectionOfTwoLines } from "./fourBarCalculations";
 
 const rChainRing = 136.1 / 2;
 const rCassette = 168 / 2;
@@ -20,30 +21,9 @@ export const calculateIFC = (
       x: point.x - rCassette * Math.sin(alpha),
       y: point.y + rCassette * Math.cos(alpha),
     };
-    const instantForceCenter = {
-      x:
-        ((chainRingContact.x * cassetteContact.y -
-          chainRingContact.y * cassetteContact.y) *
-          (layoutValues.swingarmPivotX - point.x) -
-          (chainRingContact.x - cassetteContact.y) *
-            (layoutValues.swingarmPivotX * point.y -
-              layoutValues.swingarmPivotY * point.x)) /
-        ((chainRingContact.x - cassetteContact.y) *
-          (layoutValues.swingarmPivotY - point.y) -
-          (chainRingContact.y - cassetteContact.y) *
-            (layoutValues.swingarmPivotX - point.x)),
-      y:
-        ((chainRingContact.x * cassetteContact.y -
-          chainRingContact.y * cassetteContact.y) *
-          (layoutValues.swingarmPivotY - point.y) -
-          (chainRingContact.y - cassetteContact.y) *
-            (layoutValues.swingarmPivotX * point.y -
-              layoutValues.swingarmPivotY * point.x)) /
-        ((chainRingContact.x - cassetteContact.y) *
-          (layoutValues.swingarmPivotY - point.y) -
-          (chainRingContact.y - cassetteContact.y) *
-            (layoutValues.swingarmPivotX - point.x)),
-    };
+    const instantForceCenter = intersectionOfTwoLines({pointA: chainRingContact, pointB: cassetteContact, pointC: point, pointD: {x: layoutValues.swingarmPivotX, y: layoutValues.swingarmPivotY}});
+    
+    
 
     return instantForceCenter;
   });

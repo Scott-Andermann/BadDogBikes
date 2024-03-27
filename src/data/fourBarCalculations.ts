@@ -38,6 +38,34 @@ export const lawOfCosinesTwoSides = ({
   return Math.sqrt(a ** 2 + b ** 2 - 2 * a * b * Math.cos(gamma));
 };
 
+export const intersectionOfTwoLines = ({pointA, pointB, pointC, pointD}: {pointA:Position, pointB:Position, pointC:Position, pointD:Position}) => {
+  const intersection = {
+    x:
+      ((pointA.x * pointB.y -
+        pointA.y * pointB.x) *
+        (pointC.x - pointD.x) -
+        (pointA.x - pointB.x) *
+          (pointC.x * pointD.y -
+            pointC.y * pointD.x)) /
+      ((pointA.x - pointB.x) *
+        (pointC.y - pointD.y) -
+        (pointA.y - pointB.y) *
+          (pointC.x - pointD.x)),
+    y:
+    ((pointA.x * pointB.y -
+      pointA.y * pointB.x) *
+      (pointC.y - pointD.y) -
+      (pointA.y - pointB.y) *
+        (pointC.x * pointD.y -
+          pointC.y * pointD.x)) /
+    ((pointA.x - pointB.x) *
+      (pointC.y - pointD.y) -
+      (pointA.y - pointB.y) *
+        (pointC.x - pointD.x)),
+  };
+  return intersection
+}
+
 // calculate the position of the upper shock mount for each shock step
 export const calculateShockPosition = (
   layoutValues: DefaultValues,
@@ -295,4 +323,9 @@ export const calculateChainGrowth = (axlePath: Position[]) => {
   });
 
   return chainGrowth;
+};
+
+export const instantCenter = (layoutValues: DefaultValues, rearPivotPosition: Position[], seatStayPosition: Position[]) => {
+  
+
 };

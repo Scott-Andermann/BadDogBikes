@@ -38,8 +38,11 @@ export const horstLinkSeatStayLength = (
     y: bellcrankInitialPosition.y - seatStayLength * Math.cos(thetaAB),
   };
 
+  const swingarmLength = calculateLengthOfLine(rearPivotInitialPosition, {
+    x: layoutValues.swingarmPivotX,
+    y: layoutValues.swingarmPivotY,
+  });
   
-
   return { seatStayLength, swingarmLength, thetaInSeatStay, lAC };
 };
 
@@ -65,10 +68,6 @@ export const horstLinkAxlePath = (
     };
     return position;
   });
-
-  // console.log(axlePosition);
-  
-  
 
   
   return axlePosition;
