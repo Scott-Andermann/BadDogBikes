@@ -1,9 +1,9 @@
-import * as React from "react";
-import { useState, useEffect } from "react";
-import Canvas from "./Canvas";
-import { Position } from "./data/draw";
+import * as React from 'react';
+import { useState, useEffect } from 'react';
+import Canvas from './Canvas';
+import { Position } from './data/draw';
 // import { calculateAxlePath } from "./data/singlePivotCalculations";
-import { DefaultValues } from "./InputForm";
+import { DefaultValues } from './InputForm';
 
 interface LayoutDiagramProps {
   layoutValues: DefaultValues;
@@ -14,11 +14,25 @@ interface LayoutDiagramProps {
   axlePath: Position[];
   setShowLayout: React.Dispatch<React.SetStateAction<boolean>>;
   antiSquatHeight: number[];
-  IFC: Position[]
+  IFC: Position[];
 }
 
-const LayoutDiagram = ({ layoutValues, layoutType, shockPosition, seatStayPosition, rearPivotPosition, axlePath, setShowLayout, antiSquatHeight, IFC }: LayoutDiagramProps) => {
+const LayoutDiagram = ({
+  layoutValues,
+  layoutType,
+  shockPosition,
+  seatStayPosition,
+  rearPivotPosition,
+  axlePath,
+  setShowLayout,
+  antiSquatHeight,
+  IFC,
+}: LayoutDiagramProps) => {
   const [key, setKey] = useState(0);
+
+  // TODO convert these to a useReducer
+  const [paused, setPaused] = useState(true);
+  const [pausePosition, setPausePosition] = useState('');
 
   useEffect(() => {
     setKey((prev) => prev + 1);
@@ -26,7 +40,9 @@ const LayoutDiagram = ({ layoutValues, layoutType, shockPosition, seatStayPositi
 
   return (
     <>
-      {Array.isArray(axlePath) && axlePath.length > 0 && IFC.length > 0 ? (
+      {Array.isArray(axlePath) &&
+      axlePath.length > 0 &&
+      IFC.length > 0 ? (
         <Canvas
           key={key}
           shockPosition={shockPosition}
@@ -38,6 +54,10 @@ const LayoutDiagram = ({ layoutValues, layoutType, shockPosition, seatStayPositi
           setShowLayout={setShowLayout}
           antiSquatHeight={antiSquatHeight}
           IFC={IFC}
+          paused={paused}
+          setPaused={setPaused}
+          pausePosition={pausePosition}
+          setPausePosition={setPausePosition}
         />
       ) : null}
     </>

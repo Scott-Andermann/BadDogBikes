@@ -131,7 +131,7 @@ const ResultsWrapper = ({
   }, [layoutValues, axlePath]);
 
   return (
-    <div className="relative w-[160vh] h-[80vh]">
+  <div className="relative w-[120vh] h-[60vh]">
       {showLayout && axlePath !== undefined && IFC !== undefined ? (
         <LayoutDiagram
           layoutValues={layoutValues}

@@ -1,8 +1,9 @@
-import { useRef, useEffect, useState } from "react";
-import { Position } from "./data/draw";
-import { DefaultValues } from "./InputForm";
-import draw from "./data/draw";
-import { HumanInputProps } from "./HumanInputs";
+import { useRef, useEffect, useState } from 'react';
+import { Position } from './data/draw';
+import { DefaultValues } from './InputForm';
+import draw from './data/draw';
+import { HumanInputProps } from './HumanInputs';
+import * as React from 'react';
 
 interface CanvasProps {
   shockPosition: Position[];
@@ -14,6 +15,10 @@ interface CanvasProps {
   setShowLayout: React.Dispatch<React.SetStateAction<boolean>>;
   antiSquatHeight: number[];
   IFC: Position[];
+  paused: boolean;
+  setPaused: React.Dispatch<React.SetStateAction<boolean>>;
+  pausePosition: string;
+  setPausePosition: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const Canvas = ({
@@ -25,10 +30,12 @@ const Canvas = ({
   humanInput,
   setShowLayout,
   antiSquatHeight,
-  IFC
+  IFC,
+  paused,
+  setPaused,
+  pausePosition,
+  setPausePosition,
 }: CanvasProps) => {
-  const [paused, setPaused] = useState(true);
-  const [pausePosition, setPausePosition] = useState("");
   const ref = useRef<HTMLCanvasElement>(null);
   const zeroOffset = { x: 500, y: 750 };
 
@@ -40,7 +47,7 @@ const Canvas = ({
     const canvas = ref.current;
 
     if (canvas) {
-      const ctx = canvas.getContext("2d");
+      const ctx = canvas.getContext('2d');
       if (!ctx) return;
       draw({
         ctx,
@@ -55,30 +62,30 @@ const Canvas = ({
         pausePosition,
         humanInput,
         antiSquatHeight,
-        IFC
+        IFC,
       });
     }
   }, [layoutValues, paused, pausePosition, antiSquatHeight]);
 
   const handleToggleAnimation = () => {
     setPaused(!paused);
-    setPausePosition("");
+    setPausePosition('');
   };
 
   const pauseAtTop = () => {
     setPaused(true);
-    setPausePosition("top");
-  }
+    setPausePosition('top');
+  };
 
   return (
     <>
       <canvas
-        key={paused ? "1" : "0"}
+        key={paused ? '1' : '0'}
         ref={ref}
         id="tutorial"
         width={1600}
         height={800}
-        className="bg-[#818d92] aspect-square w-[160vh] h-[80vh] rounded-lg"
+        className="bg-[#818d92] aspect-square w-[120vh] h-[60vh] rounded-lg"
       >
         Bad Dog Bikes
       </canvas>
@@ -101,8 +108,9 @@ const Canvas = ({
         >
           Show Charts
         </button>
-        <p>Travel: {Math.round(axlePath[0].y - layoutValues.bbDrop)}</p>
-
+        <p>
+          Travel: {Math.round(axlePath[0].y - layoutValues.bbDrop)}
+        </p>
       </div>
     </>
   );

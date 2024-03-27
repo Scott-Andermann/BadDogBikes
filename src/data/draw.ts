@@ -85,7 +85,7 @@ DrawMasterProps) => {
   ctx.clearRect(0, 0, 1600, 800);
   ctx.fillStyle = "red";
   ctx.beginPath();
-  ctx.arc(zeroOffset.x, zeroOffset.y, 10, 0, 2 * Math.PI);
+  ctx.arc(zeroOffset.x, zeroOffset.y, 1.5 * 25.4 / 2, 0, 2 * Math.PI);
   ctx.fill();
 
   ctx.fillStyle = "blue";
@@ -362,8 +362,8 @@ export const drawRearTriangle = ({
   // Rear Wheel
   if (layoutValues.layoutType === "singlePivot") {
     ctx.arc(
-      zeroOffset.x - rearPivotPosition[step].x,
-      zeroOffset.y - rearPivotPosition[step].y,
+      zeroOffset.x - axlePath[step].x,
+      zeroOffset.y - axlePath[step].y,
       (29 / 2) * 25.4 - 15,
       0,
       2 * Math.PI
