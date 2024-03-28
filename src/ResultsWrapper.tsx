@@ -116,10 +116,7 @@ const ResultsWrapper = ({
   }, [layoutValues.layoutType, layoutValues]);
 
   useEffect(() => {
-    console.log("recalculating");
-    
     setIFC(calculateIFC(layoutValues, axlePath));
-    setIC(calculateInstantCenter(layoutValues, rearPivotPosition, seatStayPosition))
     const antiSquatHeight = calculateAntiSquatLine(axlePath, layoutValues);
     setAntiSquatHeight(antiSquatHeight);
     const antiSquat = calculateAntiSquat(centerOfGravity, antiSquatHeight);
@@ -147,7 +144,7 @@ const ResultsWrapper = ({
   }, [layoutValues, axlePath]);  
 
   return (
-  <div className="relative w-[120vh] h-[60vh]">
+  <div className="relative w-[120vh] h-[60vh] overflow-y-scroll">
       {showLayout && axlePath !== undefined && IFC !== undefined && instantCenter !== undefined ? (
         <LayoutDiagram
           layoutValues={layoutValues}
@@ -159,7 +156,7 @@ const ResultsWrapper = ({
           setShowLayout={setShowLayout}
           antiSquatHeight={antiSquatHeight}
           IFC={IFC}
-          instantCenter={IC}
+          instantCenter={instantCenter}
         />
       ) : (
         <div className="text-white">
@@ -191,6 +188,12 @@ const ResultsWrapper = ({
                 title="Chain Growth"
                 normalize={true}
                 travelOnXaxis={true}
+              />
+              <ScatterPlot
+                inputData={instantCenter}
+                arrayInput={layoutArray.map((layout) => ({...layout.instantCenter, color: layout.color}))}
+                title="Instant Center"
+                normalize={false}
               />
             </div>
           ) : null}

@@ -18,6 +18,7 @@ export interface LayoutArray {
   axlePath: Path;
   antiSquat: Path;
   leverageRatio: Path;
+  instantCenter: Path;
   chainGrowth: Path;
   color: string;
   id: number;
@@ -53,6 +54,7 @@ function App() {
                 name: layout.title,
               },
               chainGrowth: { path: chainGrowth, name: layout.title },
+              instantCenter: { path: instantCenter, name: layout.title },
             }
           : layout
       )
@@ -85,6 +87,7 @@ function App() {
           antiSquat,
           leverageRatio,
           chainGrowth,
+          instantCenter,
         }}
         onClose={() => setIsOpen(false)}
       />

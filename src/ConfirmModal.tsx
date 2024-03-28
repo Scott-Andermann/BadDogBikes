@@ -22,6 +22,7 @@ interface LayoutObjectProps {
   antiSquat: Position[];
   leverageRatio: Position[];
   chainGrowth: Position[];
+  instantCenter: Position[];
 }
 
 const ConfirmModal = ({
@@ -48,6 +49,7 @@ const ConfirmModal = ({
         antiSquat: { path: layoutObject.antiSquat, name: title },
         leverageRatio: { path: layoutObject.leverageRatio, name: title },
         chainGrowth: { path: layoutObject.chainGrowth, name: title },
+        instantCenter: { path: layoutObject.instantCenter, name: title },
         title,
         color,
         id: Math.random() * 10000,
