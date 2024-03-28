@@ -36,6 +36,7 @@ const Canvas = ({
   pausePosition,
   setPausePosition,
 }: CanvasProps) => {
+  const [showConstruction, setShowConstruction] = useState(true);
   const ref = useRef<HTMLCanvasElement>(null);
   const zeroOffset = { x: 500, y: 750 };
 
@@ -63,9 +64,10 @@ const Canvas = ({
         humanInput,
         antiSquatHeight,
         IFC,
+        showConstruction,
       });
     }
-  }, [layoutValues, paused, pausePosition, antiSquatHeight]);
+  }, [layoutValues, paused, pausePosition, antiSquatHeight, showConstruction]);
 
   const handleToggleAnimation = () => {
     setPaused(!paused);
@@ -101,6 +103,12 @@ const Canvas = ({
           onClick={pauseAtTop}
         >
           Pause At Top
+        </button>
+        <button
+          className="bg-blue-400 border-blue-600 border border-solid rounded-sm p-2 w-40 whitespace-nowrap"
+          onClick={() => setShowConstruction(!showConstruction)}
+        >
+          Show Construction
         </button>
         <button
           className="bg-blue-400 border-blue-600 border border-solid rounded-sm p-2 w-36"

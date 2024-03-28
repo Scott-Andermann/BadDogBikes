@@ -32,6 +32,7 @@ interface DrawProps {
   humanInput?: HumanInputProps;
   antiSquatHeight?: number[];
   IFC?: Position[];
+  showConstruction?: boolean;
 }
 
 interface DrawShockProps extends DrawProps {
@@ -69,6 +70,7 @@ export const draw = ({
   pausePosition = "",
   antiSquatHeight = [],
   IFC,
+  showConstruction
 }: // humanInput,
 DrawMasterProps) => {
   if (paused) {
@@ -84,44 +86,39 @@ DrawMasterProps) => {
     direction = 1;
   }
 
+  
   // Bottom Bracket
   ctx.clearRect(0, 0, 1600, 800);
   ctx.fillStyle = "red";
   ctx.beginPath();
   ctx.arc(zeroOffset.x, zeroOffset.y, 1.5 * 25.4 / 2, 0, 2 * Math.PI);
   ctx.fill();
+  ctx.fillStyle = "blue";
+  if (showConstruction) {
 
+  // Draw construction Lines
   // chainring
   ctx.beginPath();
   ctx.arc(zeroOffset.x, zeroOffset.y, 136 / 2, 0, 2 * Math.PI);
   ctx.stroke();
 
-  ctx.fillStyle = "blue";
+
   ctx.beginPath();
   ctx.arc(zeroOffset.x, zeroOffset.y, 6, 0, 2 * Math.PI);
   ctx.fill();
 
-  // Draw construction Lines
   ctx.beginPath();
   ctx.moveTo(zeroOffset.x, zeroOffset.y);
   ctx.lineTo(0, zeroOffset.y);
   ctx.stroke();
   ctx.beginPath();
-  ctx.moveTo(zeroOffset.x, zeroOffset.y - 20);
-  ctx.lineTo(0, zeroOffset.y - 20);
+  ctx.moveTo(zeroOffset.x, zeroOffset.y - layoutValues.bbDrop);
+  ctx.lineTo(0, zeroOffset.y - layoutValues.bbDrop);
   ctx.stroke();
   
   ctx.beginPath();
-  ctx.arc(zeroOffset.x - axlePath[axlePath.length - 1].x, zeroOffset.y - axlePath[axlePath.length - 1].y, calculateLengthOfLine(rearPivotPosition[rearPivotPosition.length - 1], axlePath[axlePath.length -1]), 0, 2 * Math.PI);
+  ctx.arc(zeroOffset.x - axlePath[axlePath.length - 1].x, zeroOffset.y - axlePath[axlePath.length - 1].y, 136 / 2, 0, 2 * Math.PI);
   ctx.stroke();
-
-  //chainstay
-  ctx.strokeStyle = "purple";
-  ctx.beginPath();
-  ctx.arc(zeroOffset.x, zeroOffset.y, 450, 0, 2 * Math.PI);
-  ctx.stroke();
-  ctx.strokeStyle = "black";
-
   ctx.beginPath();
   ctx.arc(
     zeroOffset.x - layoutValues.bellcrankX,
@@ -140,15 +137,8 @@ DrawMasterProps) => {
     2 * Math.PI
   );
   ctx.stroke();
+}
 
-  // instant force center
-  // if (IFC !== undefined) {
-  //   ctx.beginPath();
-  //   ctx.arc(zeroOffset.x - IFC[step].x, zeroOffset.y - IFC[step].y, 20, 0, Math.PI * 2);
-  //   ctx.fillStyle = "blue";
-  //   ctx.fill();
-  //   // ctx.fillStyle = "black";
-  // }
 
   ctx.lineWidth = 1;
   drawShock({
@@ -217,8 +207,8 @@ DrawMasterProps) => {
         axlePath,
         antiSquatHeight,
         IFC,
+        showConstruction,
         // humanInput,
-        // IFC,
       });
     }, 17);
   }

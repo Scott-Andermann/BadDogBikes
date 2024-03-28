@@ -63,7 +63,7 @@ export const intersectionOfTwoLines = ({pointA, pointB, pointC, pointD}: {pointA
       (pointA.y - pointB.y) *
         (pointC.x - pointD.x)),
   };
-  return intersection
+  return intersection;
 }
 
 // calculate the position of the upper shock mount for each shock step

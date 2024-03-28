@@ -47,15 +47,14 @@ export const calculateAntiSquatLine = (
   const antiSquatHeight = axlePath.map((point, index) => {
     const rearContactPatch = { x: point.x, y: point.y - rTire };
     const frontAxlePositionX = wheelbase - point.x; // without fork travel
-
+    
     const slope =
       (- instantForceCenter[index].y + rearContactPatch.y) /
       (instantForceCenter[index].x - rearContactPatch.x);
+    const intercept = rearContactPatch.y + slope * rearContactPatch.x;
     
     const height =
-      slope * frontAxlePositionX +
-      instantForceCenter[index].y -
-      slope * instantForceCenter[index].x;
+      slope * frontAxlePositionX + intercept
     return height;
   });
 

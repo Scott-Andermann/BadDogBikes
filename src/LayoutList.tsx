@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { HexColorPicker } from 'react-colorful';
 import { LayoutArray } from './App';
 import { DefaultValues } from './InputForm';
@@ -12,6 +12,7 @@ interface LayoutListProps {
     React.SetStateAction<DefaultValues>
   >;
   setUpdateFromList: React.Dispatch<React.SetStateAction<boolean>>;
+  updateLayout: (id: number) => void;
 }
 
 const LayoutList = ({
@@ -19,8 +20,19 @@ const LayoutList = ({
   setLayoutArray,
   setLayoutValues,
   setUpdateFromList,
+  updateLayout,
 }: LayoutListProps) => {
-  const [color, setColor] = useState('#aabbcc');
+  const [showInput, setShowInput] = useState<number | null>(null);
+  const [newName, setNewName] = useState<string>('');
+  const refs = useRef<HTMLInputElement[]>([]);
+
+  const setRef =
+    (index: number) => (element: HTMLInputElement | null) => {
+      if (element) {
+        refs.current[index] = element;
+      }
+    };
+
   const removeLayout = (id: number) => {
     setLayoutArray((prev) =>
       prev.filter((layout) => layout.id !== id)
@@ -32,7 +44,7 @@ const LayoutList = ({
     localStorage.setItem('BDBLayouts', JSON.stringify([]));
   };
 
-  const updateLayout = (layoutValues: DefaultValues) => {
+  const updateActiveLayout = (layoutValues: DefaultValues) => {
     setLayoutValues(layoutValues);
     setUpdateFromList((prev) => !prev);
   };
@@ -44,6 +56,31 @@ const LayoutList = ({
       )
     );
   };
+
+  const rename = (id: number) => {
+    setLayoutArray((prev) =>
+      prev.map((layout) =>
+        layout.id === id ? { ...layout, title: newName } : layout
+      )
+    );
+    setNewName('');
+    setShowInput(null);
+  };
+
+  const openAndFocus = (id: number) => {
+    setShowInput(id);
+    console.log(refs.current[id]);
+
+  };
+
+  useEffect(() => {
+    if (showInput === null) return;
+    if (refs.current[showInput]) {
+      console.log("setting focus");
+      
+      refs.current[showInput].focus();
+    }
+  }, [showInput]);
 
   const wheelbase = (layout: DefaultValues) => {
     const headTubeAngle = (layout.headTubeAngle * Math.PI) / 180;
@@ -83,6 +120,7 @@ const LayoutList = ({
             <th scope="col" className={headingStyles}>
               Stack Height
             </th>
+            <th scope="col" className={headingStyles}></th>
             <th scope="col" className={headingStyles}></th>
             <th scope="col" className={headingStyles}></th>
           </tr>
@@ -141,7 +179,33 @@ const LayoutList = ({
                       scope="row"
                       className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                     >
-                      {layout.title}
+                      <input
+                        ref={setRef(layout.id)}
+                        className={`text-black ${showInput === layout.id ? "block" : "hidden"}`}
+                        onBlur={() => rename(layout.id)}
+                        value={newName}
+                        onChange={(e) => setNewName(e.target.value)}
+                      />
+                      <div
+                        data-showInput={showInput === layout.id}
+                        className={`${showInput === layout.id ? "hidden" : "flex"} flex-row justify-between`}
+                      >
+                        {layout.title}
+                        <Button
+                          size="xs"
+                          color="blue"
+                          onClick={() => openAndFocus(layout.id)}
+                        >
+                          <svg
+                            className="w-3"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="currentColor"
+                          >
+                            <path d="M6.41421 15.89L16.5563 5.74785L15.1421 4.33363L5 14.4758V15.89H6.41421ZM7.24264 17.89H3V13.6473L14.435 2.21231C14.8256 1.82179 15.4587 1.82179 15.8492 2.21231L18.6777 5.04074C19.0682 5.43126 19.0682 6.06443 18.6777 6.45495L7.24264 17.89ZM3 19.89H21V21.89H3V19.89Z"></path>
+                          </svg>
+                        </Button>
+                      </div>
                     </th>
                     <td className={bodyStyles}>
                       {Math.round(travel)}
@@ -169,7 +233,12 @@ const LayoutList = ({
                               </h3>
                             </div>
                             <div className="px-3 py-2">
-                              <GeometryTable layoutValues={layout.layoutValues} wheelbase={wheelbase(layout.layoutValues)}/>
+                              <GeometryTable
+                                layoutValues={layout.layoutValues}
+                                wheelbase={wheelbase(
+                                  layout.layoutValues
+                                )}
+                              />
                             </div>
                           </div>
                         }
@@ -180,7 +249,7 @@ const LayoutList = ({
                     <td className={bodyStyles}>
                       <button
                         onClick={() =>
-                          updateLayout(layout.layoutValues)
+                          updateActiveLayout(layout.layoutValues)
                         }
                         className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
                       >
@@ -193,6 +262,14 @@ const LayoutList = ({
                         className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
                       >
                         Delete
+                      </button>
+                    </td>
+                    <td className={bodyStyles}>
+                      <button
+                        onClick={() => updateLayout(layout.id)}
+                        className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                      >
+                        Update
                       </button>
                     </td>
                   </tr>

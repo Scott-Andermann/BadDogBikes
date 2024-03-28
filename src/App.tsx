@@ -38,6 +38,26 @@ function App() {
   const [updateFromList, setUpdateFromList] =
     useState<boolean>(false);
 
+  const updateLayout = (id: number) => {
+    setLayoutArray((prev) =>
+      prev.map((layout) =>
+        layout.id === id
+          ? {
+              ...layout,
+              layoutValues: layoutValues,
+              axlePath: { path: axlePath, name: layout.title },
+              antiSquat: { path: antiSquat, name: layout.title },
+              leverageRatio: {
+                path: leverageRatio,
+                name: layout.title,
+              },
+              chainGrowth: { path: chainGrowth, name: layout.title },
+            }
+          : layout
+      )
+    );
+  };
+
   useEffect(() => {
     const storedLayouts = localStorage.getItem('BDBLayouts');
 
@@ -86,11 +106,11 @@ function App() {
             setLayoutArray={setLayoutArray}
             setLayoutValues={setLayoutValues}
             setUpdateFromList={setUpdateFromList}
+            updateLayout={updateLayout}
           />
-
         </div>
         <div>
-        <InputForm
+          <InputForm
             setNewValues={setLayoutValues}
             setIsOpen={setIsOpen}
             layoutValues={layoutValues}
