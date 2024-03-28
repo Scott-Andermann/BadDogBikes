@@ -1,6 +1,6 @@
-import { SetStateAction, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
-import InputField from './InputField';
+import { SetStateAction, useEffect } from "react";
+import { useForm } from "react-hook-form";
+import InputField from "./InputField";
 
 export interface DefaultValues {
   bellcrankX: number;
@@ -28,7 +28,8 @@ export interface DefaultValues {
   reach: number;
   seatStayOffset: number;
   rearPivotToAxleLength: number;
-  layoutType: 'horst' | 'singlePivot';
+  layoutType: "horst" | "singlePivot";
+  wheelLayout: "29er" | "mullet" | "27";
 }
 
 export const defaultValues: DefaultValues = {
@@ -57,7 +58,8 @@ export const defaultValues: DefaultValues = {
   reach: 510,
   seatStayOffset: 10,
   rearPivotToAxleLength: 20,
-  layoutType: 'singlePivot',
+  layoutType: "singlePivot",
+  wheelLayout: "29er",
 };
 
 const InputForm = ({
@@ -78,7 +80,7 @@ const InputForm = ({
     reset,
   } = useForm({ defaultValues: defaultValues });
   const inputClasses =
-    'border border-solid border-gray-300 rounded-sm bg-blue-200';
+    "border border-solid border-gray-300 rounded-sm bg-blue-200";
 
   const onSubmit = (data: DefaultValues) => {
     setNewValues(data);
@@ -92,16 +94,20 @@ const InputForm = ({
     <form onBlur={handleSubmit((data) => onSubmit(data))}>
       <div className="flex flex-row gap-2 p-4">
         <div className="flex flex-col gap-1">
-          <h2 className="text-gray-100 text-xl font-bold">
-            Geometry Inputs
-          </h2>
+          <h2 className="text-gray-100 text-xl font-bold">Geometry Inputs</h2>
           <div className="flex flex-row gap-2 ml-2 justify-between">
-            <label className="text-sm text-gray-100">
-              Linkage Type
-            </label>
-            <select {...register('layoutType')} className="p-0">
+            <label className="text-sm text-gray-100">Linkage Type</label>
+            <select {...register("layoutType")} className="p-0">
               <option value="singlePivot">Single Pivot</option>
               <option value="horst">Horst Link</option>
+            </select>
+          </div>
+          <div className="flex flex-row gap-2 ml-2 justify-between">
+            <label className="text-sm text-gray-100">Wheel Layout</label>
+            <select {...register("wheelLayout")} className="p-0">
+              <option value="29er">29er</option>
+              <option value="mullet">Mullet</option>
+              <option value="27">27.5</option>
             </select>
           </div>
           <InputField
@@ -261,7 +267,7 @@ const InputForm = ({
             errors={errors}
             currentValue={layoutValues.swingarmPivotY}
           />
-          {layoutValues.layoutType === 'singlePivot' ? (
+          {layoutValues.layoutType === "singlePivot" ? (
             <>
               <InputField
                 label="Axle Offset X"
@@ -281,7 +287,7 @@ const InputForm = ({
               />
             </>
           ) : null}
-          {layoutValues.layoutType === 'horst' ? (
+          {layoutValues.layoutType === "horst" ? (
             <>
               <InputField
                 label="Seat Stay Offset"
@@ -302,10 +308,7 @@ const InputForm = ({
             </>
           ) : null}
           <div className="flex flex-row gap-2">
-            <input
-              className={`${inputClasses} max-w-max p-2`}
-              type="submit"
-            />
+            <input className={`${inputClasses} max-w-max p-2`} type="submit" />
             <button
               onClick={() => setIsOpen(true)}
               className="bg-blue-200 border-gray-300 border border-solid rounded-sm p-2"

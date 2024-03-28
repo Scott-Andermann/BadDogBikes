@@ -368,11 +368,12 @@ export const drawRearTriangle = ({
   ctx.lineWidth = 30;
   ctx.beginPath();
   // Rear Wheel
+  const rearWheelSize = layoutValues.wheelLayout === "29er" ? 29 : 27.5
   if (layoutValues.layoutType === "singlePivot") {
     ctx.arc(
       zeroOffset.x - axlePath[step].x,
       zeroOffset.y - axlePath[step].y,
-      (29 / 2) * 25.4 - 15,
+      (rearWheelSize / 2) * 25.4 - 15,
       0,
       2 * Math.PI
     );
@@ -382,7 +383,7 @@ export const drawRearTriangle = ({
     ctx.arc(
       zeroOffset.x - axlePath[step].x,
       zeroOffset.y - axlePath[step].y,
-      (29 / 2) * 25.4 - 15,
+      (rearWheelSize / 2) * 25.4 - 15,
       0,
       2 * Math.PI
     );
@@ -432,6 +433,8 @@ const drawFrontTriangle = ({
   ctx.beginPath();
   const seatTubeAngle = (layoutValues.seatTubeAngle * Math.PI) / 180;
   const headTubeAngle = (layoutValues.headTubeAngle * Math.PI) / 180;
+  const frontEndOffset = layoutValues.wheelLayout === "mullet" ? 0.75 * 25.4 : 0;
+
   const bottomOfHeadTube = {
     x:
       zeroOffset.x +
@@ -441,7 +444,7 @@ const drawFrontTriangle = ({
       zeroOffset.y -
       layoutValues.bbDrop -
       layoutValues.forkLength * Math.sin(headTubeAngle) +
-      layoutValues.forkOffset * Math.cos(headTubeAngle),
+      layoutValues.forkOffset * Math.cos(headTubeAngle) - frontEndOffset,
   };
   ctx.moveTo(
     zeroOffset.x - 300 * Math.cos(seatTubeAngle),
@@ -450,9 +453,9 @@ const drawFrontTriangle = ({
 
   ctx.lineTo(
     zeroOffset.x + layoutValues.reach,
-    bottomOfHeadTube.y - layoutValues.headTubeLength * Math.sin(headTubeAngle)
+    bottomOfHeadTube.y - layoutValues.headTubeLength * Math.sin(headTubeAngle) - frontEndOffset
   );
-  ctx.lineTo(bottomOfHeadTube.x, bottomOfHeadTube.y);
+  ctx.lineTo(bottomOfHeadTube.x, bottomOfHeadTube.y - frontEndOffset);
   ctx.lineTo(zeroOffset.x, zeroOffset.y);
   ctx.stroke();
 
@@ -460,11 +463,13 @@ const drawFrontTriangle = ({
   ctx.lineWidth = 20;
   ctx.strokeStyle = "orange";
   ctx.beginPath();
-  ctx.moveTo(bottomOfHeadTube.x, bottomOfHeadTube.y);
+  ctx.moveTo(bottomOfHeadTube.x, bottomOfHeadTube.y - frontEndOffset);
   ctx.lineTo(
     bottomOfHeadTube.x + layoutValues.forkLength * Math.cos(headTubeAngle),
-    bottomOfHeadTube.y + layoutValues.forkLength * Math.sin(headTubeAngle)
+    bottomOfHeadTube.y + layoutValues.forkLength * Math.sin(headTubeAngle) - frontEndOffset
   );
+  const frontWheelSize = layoutValues.wheelLayout === "27" ? 27.5 : 29;
+
   const frontAxlePosition = {
     x:
       bottomOfHeadTube.x +
@@ -473,7 +478,7 @@ const drawFrontTriangle = ({
     y:
       bottomOfHeadTube.y +
       layoutValues.forkLength * Math.sin(headTubeAngle) -
-      layoutValues.forkOffset * Math.cos(headTubeAngle),
+      layoutValues.forkOffset * Math.cos(headTubeAngle) - frontEndOffset,
   };
   ctx.lineTo(frontAxlePosition.x, frontAxlePosition.y);
   ctx.stroke();
@@ -481,7 +486,7 @@ const drawFrontTriangle = ({
   ctx.arc(
     frontAxlePosition.x,
     frontAxlePosition.y,
-    (29 / 2) * 25.4 - 15,
+    (frontWheelSize / 2) * 25.4 - 15,
     0,
     2 * Math.PI
   );

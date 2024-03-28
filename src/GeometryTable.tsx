@@ -22,6 +22,14 @@ const GeometryTable = ({
       </Table.Head>
       <Table.Body>
         <Table.Row>
+          <Table.Cell>Wheel Layout</Table.Cell>
+          <Table.Cell>{layoutValues.wheelLayout}</Table.Cell>
+        </Table.Row>
+        <Table.Row>
+          <Table.Cell>Suspension Layout</Table.Cell>
+          <Table.Cell>{layoutValues.layoutType}</Table.Cell>
+        </Table.Row>
+        <Table.Row>
           <Table.Cell>Wheelbase</Table.Cell>
           <Table.Cell>{Math.round(wheelbase)}</Table.Cell>
         </Table.Row>

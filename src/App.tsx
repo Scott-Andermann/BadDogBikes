@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react';
-import './App.css';
-import ConfirmModal from './ConfirmModal';
-import { Position } from './data/draw';
-import InputForm, { defaultValues, DefaultValues } from './InputForm';
-import LayoutList from './LayoutList';
-import ResultsWrapper from './ResultsWrapper';
-import { DarkThemeToggle, Flowbite } from 'flowbite-react';
+import { useEffect, useState } from "react";
+import "./App.css";
+import ConfirmModal from "./ConfirmModal";
+import { Position } from "./data/draw";
+import InputForm, { defaultValues, DefaultValues } from "./InputForm";
+import LayoutList from "./LayoutList";
+import ResultsWrapper from "./ResultsWrapper";
+import { DarkThemeToggle, Flowbite } from "flowbite-react";
 
 export interface Path {
   path: Position[];
@@ -37,8 +37,7 @@ function App() {
   const [chainGrowth, setChainGrowth] = useState<Position[]>([]);
   const [instantCenter, setInstantCenter] = useState<Position[]>([]);
 
-  const [updateFromList, setUpdateFromList] =
-    useState<boolean>(false);
+  const [updateFromList, setUpdateFromList] = useState<boolean>(false);
 
   const updateLayout = (id: number) => {
     setLayoutArray((prev) =>
@@ -62,7 +61,7 @@ function App() {
   };
 
   useEffect(() => {
-    const storedLayouts = localStorage.getItem('BDBLayouts');
+    const storedLayouts = localStorage.getItem("BDBLayouts");
 
     if (storedLayouts !== null) {
       setLayoutArray(JSON.parse(storedLayouts));
@@ -71,7 +70,7 @@ function App() {
 
   useEffect(() => {
     if (layoutArray.length !== 0) {
-      localStorage.setItem('BDBLayouts', JSON.stringify(layoutArray));
+      localStorage.setItem("BDBLayouts", JSON.stringify(layoutArray));
     }
   }, [layoutArray]);
 
