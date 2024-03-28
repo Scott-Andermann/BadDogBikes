@@ -325,7 +325,9 @@ export const calculateChainGrowth = (axlePath: Position[]) => {
   return chainGrowth;
 };
 
-export const instantCenter = (layoutValues: DefaultValues, rearPivotPosition: Position[], seatStayPosition: Position[]) => {
-  
-
+export const calculateInstantCenter = (layoutValues: DefaultValues, rearPivotPosition: Position[], seatStayPosition: Position[]) => {
+  const center = rearPivotPosition.map((point, index) => {
+    return intersectionOfTwoLines({pointA: point, pointB: {x:layoutValues.swingarmPivotX, y:layoutValues.swingarmPivotY}, pointC: seatStayPosition[index], pointD: {x: layoutValues.bellcrankX, y: layoutValues.bellcrankY}})
+  });
+  return center;
 };

@@ -8,7 +8,7 @@ import {
 } from "./data/singlePivotCalculations";
 import LayoutDiagram from "./LayoutDiagram";
 import ScatterPlot from "./ScatterPlot";
-import { calculateRearPivot, calculateLeverRatio, calculateChainGrowth, calculateSeatStayLength } from "./data/fourBarCalculations";
+import { calculateRearPivot, calculateLeverRatio, calculateChainGrowth, calculateSeatStayLength, calculateInstantCenter } from "./data/fourBarCalculations";
 import {
   horstLinkAxlePath,
   horstLinkSeatStayLength,
@@ -29,6 +29,8 @@ interface ResultsWrapperProps {
   setLeverageRatio: React.Dispatch<React.SetStateAction<Position[]>>;
   chainGrowth: Position[];
   setChainGrowth: React.Dispatch<React.SetStateAction<Position[]>>;
+  instantCenter: Position[];
+  setInstantCenter: React.Dispatch<React.SetStateAction<Position[]>>;
 }
 
 const centerOfGravity = {x: 0, y: 650}
@@ -44,11 +46,14 @@ const ResultsWrapper = ({
   leverageRatio,
   setLeverageRatio,
   chainGrowth,
-  setChainGrowth
+  setChainGrowth,
+  instantCenter,
+  setInstantCenter,
 }: ResultsWrapperProps) => {
   const [showLayout, setShowLayout] = useState(true);
   const [rearPivotPosition, setRearPivotPosition] = useState<Position[]>([]);
   const [IFC, setIFC] = useState<Position[]>([]);
+  const [IC, setIC] = useState<Position[]>([]);
   const [antiSquatHeight, setAntiSquatHeight] = useState<number[]>([]);
 
   const {
@@ -107,10 +112,14 @@ const ResultsWrapper = ({
         )
       );
     }
+
   }, [layoutValues.layoutType, layoutValues]);
 
   useEffect(() => {
+    console.log("recalculating");
+    
     setIFC(calculateIFC(layoutValues, axlePath));
+    setIC(calculateInstantCenter(layoutValues, rearPivotPosition, seatStayPosition))
     const antiSquatHeight = calculateAntiSquatLine(axlePath, layoutValues);
     setAntiSquatHeight(antiSquatHeight);
     const antiSquat = calculateAntiSquat(centerOfGravity, antiSquatHeight);
@@ -133,13 +142,13 @@ const ResultsWrapper = ({
       })
       setLeverageRatio(leverChart as Position[]);
       setChainGrowth(chainGrowthChart);
-
     }
-  }, [layoutValues, axlePath]);
+    setInstantCenter(calculateInstantCenter(layoutValues, rearPivotPosition, seatStayPosition))
+  }, [layoutValues, axlePath]);  
 
   return (
   <div className="relative w-[120vh] h-[60vh]">
-      {showLayout && axlePath !== undefined && IFC !== undefined ? (
+      {showLayout && axlePath !== undefined && IFC !== undefined && instantCenter !== undefined ? (
         <LayoutDiagram
           layoutValues={layoutValues}
           layoutType="singlePivot"
@@ -150,6 +159,7 @@ const ResultsWrapper = ({
           setShowLayout={setShowLayout}
           antiSquatHeight={antiSquatHeight}
           IFC={IFC}
+          instantCenter={IC}
         />
       ) : (
         <div className="text-white">

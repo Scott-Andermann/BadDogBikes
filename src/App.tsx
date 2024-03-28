@@ -34,6 +34,7 @@ function App() {
   const [antiSquat, setAntiSquat] = useState<Position[]>([]);
   const [leverageRatio, setLeverageRatio] = useState<Position[]>([]);
   const [chainGrowth, setChainGrowth] = useState<Position[]>([]);
+  const [instantCenter, setInstantCenter] = useState<Position[]>([]);
 
   const [updateFromList, setUpdateFromList] =
     useState<boolean>(false);
@@ -100,6 +101,8 @@ function App() {
             setLeverageRatio={setLeverageRatio}
             chainGrowth={chainGrowth}
             setChainGrowth={setChainGrowth}
+            instantCenter={instantCenter}
+            setInstantCenter={setInstantCenter}
           />
           <LayoutList
             layoutArray={layoutArray}

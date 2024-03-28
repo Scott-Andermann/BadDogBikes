@@ -18,6 +18,7 @@ interface DrawFrontTriangleProps extends DrawFrameProps {
   antiSquatHeight: number[];
   step: number;
   IFC: Position[];
+  instantCenter: Position[];
 }
 
 interface DrawProps {
@@ -32,6 +33,7 @@ interface DrawProps {
   humanInput?: HumanInputProps;
   antiSquatHeight?: number[];
   IFC?: Position[];
+  instantCenter?: Position[];
   showConstruction?: boolean;
 }
 
@@ -70,6 +72,7 @@ export const draw = ({
   pausePosition = "",
   antiSquatHeight = [],
   IFC,
+  instantCenter,
   showConstruction
 }: // humanInput,
 DrawMasterProps) => {
@@ -180,7 +183,8 @@ DrawMasterProps) => {
     zeroOffset,
     humanInput: undefined,
   });
-  if (IFC !== undefined) {
+  
+  if (IFC !== undefined && instantCenter !== undefined) {
     drawAntiSquat({
       ctx,
       layoutValues,
@@ -189,6 +193,7 @@ DrawMasterProps) => {
       antiSquatHeight,
       step,
       IFC,
+      instantCenter,
     });
   }
   step += direction;
@@ -207,6 +212,7 @@ DrawMasterProps) => {
         axlePath,
         antiSquatHeight,
         IFC,
+        instantCenter,
         showConstruction,
         // humanInput,
       });
@@ -493,6 +499,7 @@ const drawAntiSquat = ({
   antiSquatHeight,
   step,
   IFC,
+  instantCenter,
 }: DrawFrontTriangleProps) => {
   const headTubeAngle = (layoutValues.headTubeAngle * Math.PI) / 180;
   const bottomOfHeadTube = {
@@ -533,6 +540,16 @@ const drawAntiSquat = ({
   ctx.arc(
     frontAxlePosition.x,
     frontAxlePosition.y - antiSquatHeight[step],
+    5,
+    0,
+    Math.PI * 2
+  );
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.arc(
+    zeroOffset.x - instantCenter[step].x,
+    zeroOffset.y - instantCenter[step].y,
     5,
     0,
     Math.PI * 2

@@ -15,6 +15,7 @@ interface LayoutDiagramProps {
   setShowLayout: React.Dispatch<React.SetStateAction<boolean>>;
   antiSquatHeight: number[];
   IFC: Position[];
+  instantCenter: Position[];
 }
 
 const LayoutDiagram = ({
@@ -27,6 +28,7 @@ const LayoutDiagram = ({
   setShowLayout,
   antiSquatHeight,
   IFC,
+  instantCenter,
 }: LayoutDiagramProps) => {
   const [key, setKey] = useState(0);
 
@@ -42,7 +44,8 @@ const LayoutDiagram = ({
     <>
       {Array.isArray(axlePath) &&
       axlePath.length > 0 &&
-      IFC.length > 0 ? (
+      IFC.length > 0 &&
+      instantCenter.length > 0 ? (
         <Canvas
           key={key}
           shockPosition={shockPosition}
@@ -54,6 +57,7 @@ const LayoutDiagram = ({
           setShowLayout={setShowLayout}
           antiSquatHeight={antiSquatHeight}
           IFC={IFC}
+          instantCenter={instantCenter}
           paused={paused}
           setPaused={setPaused}
           pausePosition={pausePosition}

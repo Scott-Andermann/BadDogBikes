@@ -19,6 +19,7 @@ interface CanvasProps {
   setPaused: React.Dispatch<React.SetStateAction<boolean>>;
   pausePosition: string;
   setPausePosition: React.Dispatch<React.SetStateAction<string>>;
+  instantCenter: Position[];
 }
 
 const Canvas = ({
@@ -35,10 +36,11 @@ const Canvas = ({
   setPaused,
   pausePosition,
   setPausePosition,
+  instantCenter,
 }: CanvasProps) => {
   const [showConstruction, setShowConstruction] = useState(true);
   const ref = useRef<HTMLCanvasElement>(null);
-  const zeroOffset = { x: 500, y: 750 };
+  const zeroOffset = { x: 500, y: 750 };  
 
   const bellcrankOffset = {
     x: zeroOffset.x - layoutValues.bellcrankX,
@@ -64,6 +66,7 @@ const Canvas = ({
         humanInput,
         antiSquatHeight,
         IFC,
+        instantCenter,
         showConstruction,
       });
     }
