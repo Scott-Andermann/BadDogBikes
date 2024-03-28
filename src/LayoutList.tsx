@@ -70,14 +70,11 @@ const LayoutList = ({
   const openAndFocus = (id: number) => {
     setShowInput(id);
     console.log(refs.current[id]);
-
   };
 
   useEffect(() => {
     if (showInput === null) return;
     if (refs.current[showInput]) {
-      console.log("setting focus");
-      
       refs.current[showInput].focus();
     }
   }, [showInput]);
@@ -181,14 +178,18 @@ const LayoutList = ({
                     >
                       <input
                         ref={setRef(layout.id)}
-                        className={`text-black ${showInput === layout.id ? "block" : "hidden"}`}
+                        className={`text-black ${
+                          showInput === layout.id ? 'block' : 'hidden'
+                        }`}
                         onBlur={() => rename(layout.id)}
                         value={newName}
                         onChange={(e) => setNewName(e.target.value)}
                       />
                       <div
                         data-showInput={showInput === layout.id}
-                        className={`${showInput === layout.id ? "hidden" : "flex"} flex-row justify-between`}
+                        className={`${
+                          showInput === layout.id ? 'hidden' : 'flex'
+                        } flex-row justify-between`}
                       >
                         {layout.title}
                         <Button
