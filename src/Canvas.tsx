@@ -40,7 +40,7 @@ const Canvas = ({
 }: CanvasProps) => {
   const [showConstruction, setShowConstruction] = useState(true);
   const ref = useRef<HTMLCanvasElement>(null);
-  const zeroOffset = { x: 500, y: 750 };  
+  const zeroOffset = { x: 500, y: 750 };
 
   const bellcrankOffset = {
     x: zeroOffset.x - layoutValues.bellcrankX,
@@ -49,15 +49,7 @@ const Canvas = ({
   useEffect(() => {
     const canvas = ref.current;
 
-    const handleMouseMove = (event) => {
-      // Your mouse move logic here
-      // console.log('Mouse moved:', event.clientX, event.clientY);
-    };
     if (canvas) {
-      console.log(ref);
-  
-      canvas.addEventListener('mousemove', handleMouseMove);
-      
       const ctx = canvas.getContext('2d');
       if (!ctx) return;
       draw({
@@ -78,13 +70,13 @@ const Canvas = ({
         showConstruction,
       });
     }
-    return () => {
-      // Clean up: remove the event listener when the component unmounts
-      if (canvas) {
-        canvas.removeEventListener('mousemove', handleMouseMove);
-      }
-    };
-  }, [layoutValues, paused, pausePosition, antiSquatHeight, showConstruction]);
+  }, [
+    layoutValues,
+    paused,
+    pausePosition,
+    antiSquatHeight,
+    showConstruction,
+  ]);
 
   const handleToggleAnimation = () => {
     setPaused(!paused);

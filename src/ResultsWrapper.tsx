@@ -153,11 +153,8 @@ const ResultsWrapper = ({
     setInstantCenter(calculateInstantCenter(layoutValues, rearPivotPosition, seatStayPosition))
   }, [layoutValues, axlePath]);  
 
-  console.log(layoutArray);
-  
-
   return (
-  <div className="relative w-[120vh] h-[60vh] overflow-y-scroll">
+    <div className={`relative w-[120vh] h-[60vh] ${showLayout ? "" : "overflow-y-scroll"}`}>
       {showLayout && axlePath !== undefined && IFC !== undefined && instantCenter !== undefined ? (
         <LayoutDiagram
           layoutValues={layoutValues}

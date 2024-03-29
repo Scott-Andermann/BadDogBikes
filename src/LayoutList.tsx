@@ -65,7 +65,6 @@ const LayoutList = ({
   const openAndFocus = (id: number, title: string) => {
     setShowInput(id);
     setNewName(title);
-    console.log(refs.current[id]);
   };
 
   useEffect(() => {
@@ -178,7 +177,6 @@ const LayoutList = ({
                         onChange={(e) => setNewName(e.target.value)}
                       />
                       <div
-                        data-showInput={showInput === layout.id}
                         className={`${
                           showInput === layout.id ? "hidden" : "flex"
                         } flex-row justify-between gap-1`}

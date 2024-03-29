@@ -33,7 +33,7 @@ const ClickAndDrag = () => {
 
       points.forEach((point, index) => {
         const distance = Math.sqrt((point.x - mouseX) ** 2 + (point.y - mouseY) ** 2);
-        console.log(distance);
+        // console.log(distance);
         
         if (distance < 10) {
           setSelectedPointIndex(index);
@@ -70,7 +70,7 @@ const ClickAndDrag = () => {
     };
   }, [dragging, points, selectedPointIndex]);
 
-  console.log(points);
+  // console.log(points);
   
 
   return (
