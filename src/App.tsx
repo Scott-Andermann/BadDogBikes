@@ -6,6 +6,7 @@ import InputForm, { defaultValues, DefaultValues } from "./InputForm";
 import LayoutList from "./LayoutList";
 import ResultsWrapper from "./ResultsWrapper";
 import { DarkThemeToggle, Flowbite } from "flowbite-react";
+import ClickAndDrag from "./ClickAndDrag";
 
 export interface Path {
   path: Position[];
@@ -17,6 +18,7 @@ export interface LayoutArray {
   layoutValues: DefaultValues;
   axlePath: Path;
   antiSquat: Path;
+  antiRise: Path;
   leverageRatio: Path;
   instantCenter: Path;
   chainGrowth: Path;
@@ -33,6 +35,7 @@ function App() {
   // TODO: Convert these to useReducer
   const [axlePath, setAxlePath] = useState<Position[]>([]);
   const [antiSquat, setAntiSquat] = useState<Position[]>([]);
+  const [antiRise, setAntiRise] = useState<Position[]>([]);
   const [leverageRatio, setLeverageRatio] = useState<Position[]>([]);
   const [chainGrowth, setChainGrowth] = useState<Position[]>([]);
   const [instantCenter, setInstantCenter] = useState<Position[]>([]);
@@ -48,6 +51,7 @@ function App() {
               layoutValues: layoutValues,
               axlePath: { path: axlePath, name: layout.title },
               antiSquat: { path: antiSquat, name: layout.title },
+              antiRise: { path: antiRise, name: layout.title },
               leverageRatio: {
                 path: leverageRatio,
                 name: layout.title,
@@ -84,6 +88,7 @@ function App() {
           layoutValues,
           axlePath,
           antiSquat,
+          antiRise,
           leverageRatio,
           chainGrowth,
           instantCenter,
@@ -99,6 +104,8 @@ function App() {
             setAxlePath={setAxlePath}
             antiSquat={antiSquat}
             setAntiSquat={setAntiSquat}
+            antiRise={antiRise}
+            setAntiRise={setAntiRise}
             leverageRatio={leverageRatio}
             setLeverageRatio={setLeverageRatio}
             chainGrowth={chainGrowth}
@@ -123,6 +130,7 @@ function App() {
           />
         </div>
       </div>
+      <ClickAndDrag />
     </Flowbite>
   );
 }

@@ -20,6 +20,7 @@ interface LayoutObjectProps {
   layoutValues: DefaultValues;
   axlePath: Position[];
   antiSquat: Position[];
+  antiRise: Position[];
   leverageRatio: Position[];
   chainGrowth: Position[];
   instantCenter: Position[];
@@ -47,6 +48,7 @@ const ConfirmModal = ({
         layoutValues: layoutObject.layoutValues,
         axlePath: { path: layoutObject.axlePath, name: title },
         antiSquat: { path: layoutObject.antiSquat, name: title },
+        antiRise: { path: layoutObject.antiRise, name: title },
         leverageRatio: { path: layoutObject.leverageRatio, name: title },
         chainGrowth: { path: layoutObject.chainGrowth, name: title },
         instantCenter: { path: layoutObject.instantCenter, name: title },

@@ -15,7 +15,7 @@ import {
 } from "./data/horstLinkCalculations";
 import * as React from "react";
 import { LayoutArray } from "./App";
-import { calculateAntiSquatLine, calculateIFC } from "./data/antiSquat";
+import { calculateAntiRiseLine, calculateAntiSquatLine, calculateIFC } from "./data/antiSquat";
 import { calculateAntiSquat } from "./data/antiSquat";
 
 interface ResultsWrapperProps {
@@ -25,6 +25,8 @@ interface ResultsWrapperProps {
   setAxlePath: React.Dispatch<React.SetStateAction<Position[]>>;
   antiSquat: Position[];
   setAntiSquat: React.Dispatch<React.SetStateAction<Position[]>>;
+  antiRise: Position[];
+  setAntiRise: React.Dispatch<React.SetStateAction<Position[]>>;
   leverageRatio: Position[];
   setLeverageRatio: React.Dispatch<React.SetStateAction<Position[]>>;
   chainGrowth: Position[];
@@ -49,11 +51,12 @@ const ResultsWrapper = ({
   setChainGrowth,
   instantCenter,
   setInstantCenter,
+  antiRise,
+  setAntiRise
 }: ResultsWrapperProps) => {
   const [showLayout, setShowLayout] = useState(true);
   const [rearPivotPosition, setRearPivotPosition] = useState<Position[]>([]);
   const [IFC, setIFC] = useState<Position[]>([]);
-  const [IC, setIC] = useState<Position[]>([]);
   const [antiSquatHeight, setAntiSquatHeight] = useState<number[]>([]);
 
   const {
@@ -118,13 +121,20 @@ const ResultsWrapper = ({
   useEffect(() => {
     setIFC(calculateIFC(layoutValues, axlePath));
     const antiSquatHeight = calculateAntiSquatLine(axlePath, layoutValues);
+    const antiRiseHeight = calculateAntiRiseLine(axlePath, layoutValues, rearPivotPosition, seatStayPosition);
     setAntiSquatHeight(antiSquatHeight);
     const antiSquat = calculateAntiSquat(centerOfGravity, antiSquatHeight);
-    const chartData = antiSquat.map((step, index) => {
+    const antiRise = calculateAntiSquat(centerOfGravity, antiRiseHeight);
+    const antiSquatChartData = antiSquat.map((step, index) => {
       return { x: axlePath[index].y, y: step };
     });
+    const antiRiseChartData = antiRise.map((step, index) => {
+      return { x: axlePath[index].y, y: step };
+    });
+    setAntiRise(antiRiseChartData);
 
-    setAntiSquat(chartData);
+
+    setAntiSquat(antiSquatChartData);
     if (axlePath.length > 0) {
       const lever = calculateLeverRatio(
         axlePath,
@@ -142,6 +152,9 @@ const ResultsWrapper = ({
     }
     setInstantCenter(calculateInstantCenter(layoutValues, rearPivotPosition, seatStayPosition))
   }, [layoutValues, axlePath]);  
+
+  console.log(layoutArray);
+  
 
   return (
   <div className="relative w-[120vh] h-[60vh] overflow-y-scroll">
@@ -172,6 +185,13 @@ const ResultsWrapper = ({
                 inputData={antiSquat}
                 arrayInput={layoutArray.map((layout) => ({...layout.antiSquat, color: layout.color}))}
                 title="Anti Squat"
+                normalize={true}
+                travelOnXaxis={true}
+              />
+              <ScatterPlot
+                inputData={antiRise}
+                arrayInput={layoutArray.map((layout) => ({...layout.antiRise, color: layout.color}))}
+                title="Anti Rise"
                 normalize={true}
                 travelOnXaxis={true}
               />

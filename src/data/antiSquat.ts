@@ -1,10 +1,12 @@
 import { DefaultValues } from "../InputForm";
 import { Position } from "./draw";
-import { intersectionOfTwoLines } from "./fourBarCalculations";
+import {
+  calculateInstantCenter,
+  intersectionOfTwoLines,
+} from "./fourBarCalculations";
 
 const rChainRing = 136.1 / 2;
-const rCassette = 168 / 2;
-const rTire = (29 * 25.4) / 2;
+const rCassette = 104 / 2; // 40T
 
 export const calculateIFC = (
   layoutValues: DefaultValues,
@@ -21,9 +23,15 @@ export const calculateIFC = (
       x: point.x - rCassette * Math.sin(alpha),
       y: point.y + rCassette * Math.cos(alpha),
     };
-    const instantForceCenter = intersectionOfTwoLines({pointA: chainRingContact, pointB: cassetteContact, pointC: point, pointD: {x: layoutValues.swingarmPivotX, y: layoutValues.swingarmPivotY}});
-    
-    
+    const instantForceCenter = intersectionOfTwoLines({
+      pointA: chainRingContact,
+      pointB: cassetteContact,
+      pointC: point,
+      pointD: {
+        x: layoutValues.swingarmPivotX,
+        y: layoutValues.swingarmPivotY,
+      },
+    });
 
     return instantForceCenter;
   });
@@ -33,7 +41,7 @@ export const calculateIFC = (
 export const calculateAntiSquatLine = (
   // centerOfGravity: Position,
   axlePath: Position[],
-  layoutValues: DefaultValues,
+  layoutValues: DefaultValues
 ) => {
   const instantForceCenter = calculateIFC(layoutValues, axlePath);
   const headTubeAngle = (layoutValues.headTubeAngle * Math.PI) / 180;
@@ -43,29 +51,65 @@ export const calculateAntiSquatLine = (
     layoutValues.forkLength * Math.cos(headTubeAngle) +
     Math.cos(Math.asin(layoutValues.bbDrop / layoutValues.chainStay)) *
       layoutValues.chainStay;
+  const rTire =
+    layoutValues.wheelLayout === "29er" ? (29 * 25.4) / 2 : (27.5 * 25.4) / 2;
 
   const antiSquatHeight = axlePath.map((point, index) => {
     const rearContactPatch = { x: point.x, y: point.y - rTire };
     const frontAxlePositionX = wheelbase - point.x; // without fork travel
-    
+
     const slope =
-      (- instantForceCenter[index].y + rearContactPatch.y) /
+      (-instantForceCenter[index].y + rearContactPatch.y) /
       (instantForceCenter[index].x - rearContactPatch.x);
     const intercept = rearContactPatch.y + slope * rearContactPatch.x;
-    
-    const height =
-      slope * frontAxlePositionX + intercept
+
+    const height = slope * frontAxlePositionX + intercept;
     return height;
   });
 
   return antiSquatHeight;
 };
 
-export const calculateAntiSquat = (centerOfGravity: Position, antiSquatHeight: number[]) => {
-
+export const calculateAntiSquat = (
+  centerOfGravity: Position,
+  antiSquatHeight: number[]
+) => {
   const antiSquat = antiSquatHeight.map((height) => {
-    return height / centerOfGravity.y
-  })
+    return height / centerOfGravity.y;
+  });
 
-  return antiSquat
-}
+  return antiSquat;
+};
+
+export const calculateAntiRiseLine = (
+  axlePath: Position[],
+  layoutValues: DefaultValues,
+  rearPivotPosition: Position[],
+  seatStayPosition: Position[]
+) => {
+  const instantCenter = calculateInstantCenter(
+    layoutValues,
+    rearPivotPosition,
+    seatStayPosition
+  );
+  const headTubeAngle = (layoutValues.headTubeAngle * Math.PI) / 180;
+  const wheelbase =
+    layoutValues.reach +
+    layoutValues.headTubeLength * Math.cos(headTubeAngle) +
+    layoutValues.forkLength * Math.cos(headTubeAngle) +
+    Math.cos(Math.asin(layoutValues.bbDrop / layoutValues.chainStay)) *
+      layoutValues.chainStay;
+  const rTire =
+    layoutValues.wheelLayout === "29er" ? (29 * 25.4) / 2 : (27.5 * 25.4) / 2;
+  const antiRiseHeight = axlePath.map((point, index) => {
+    const rearContactPatch = { x: point.x, y: point.y - rTire };
+    const frontAxlePositionX = wheelbase - point.x; // without fork travel
+    const slope =
+      (-instantCenter[index].y + rearContactPatch.y) /
+      (instantCenter[index].x - rearContactPatch.x);
+    const intercept = rearContactPatch.y + slope * rearContactPatch.x;
+    const height = slope * frontAxlePositionX + intercept;
+    return height;
+  });
+  return antiRiseHeight;
+};
