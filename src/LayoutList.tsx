@@ -1,14 +1,16 @@
-import { useEffect, useRef, useState } from "react";
-import { HexColorPicker } from "react-colorful";
-import { LayoutArray } from "./App";
-import { DefaultValues } from "./InputForm";
-import { Button, Popover } from "flowbite-react";
-import GeometryTable from "./GeometryTable";
+import { useEffect, useRef, useState } from 'react';
+import { HexColorPicker } from 'react-colorful';
+import { LayoutArray } from './App';
+import { DefaultValues } from './InputForm';
+import { Button, Popover } from 'flowbite-react';
+import GeometryTable from './GeometryTable';
 
 interface LayoutListProps {
   layoutArray: LayoutArray[];
   setLayoutArray: React.Dispatch<React.SetStateAction<LayoutArray[]>>;
-  setLayoutValues: React.Dispatch<React.SetStateAction<DefaultValues>>;
+  setLayoutValues: React.Dispatch<
+    React.SetStateAction<DefaultValues>
+  >;
   setUpdateFromList: React.Dispatch<React.SetStateAction<boolean>>;
   updateLayout: (id: number) => void;
 }
@@ -21,22 +23,25 @@ const LayoutList = ({
   updateLayout,
 }: LayoutListProps) => {
   const [showInput, setShowInput] = useState<number | null>(null);
-  const [newName, setNewName] = useState<string>("");
+  const [newName, setNewName] = useState<string>('');
   const refs = useRef<HTMLInputElement[]>([]);
 
-  const setRef = (index: number) => (element: HTMLInputElement | null) => {
-    if (element) {
-      refs.current[index] = element;
-    }
-  };
+  const setRef =
+    (index: number) => (element: HTMLInputElement | null) => {
+      if (element) {
+        refs.current[index] = element;
+      }
+    };
 
   const removeLayout = (id: number) => {
-    setLayoutArray((prev) => prev.filter((layout) => layout.id !== id));
+    setLayoutArray((prev) =>
+      prev.filter((layout) => layout.id !== id)
+    );
   };
 
   const resetLayouts = () => {
     setLayoutArray([]);
-    localStorage.setItem("BDBLayouts", JSON.stringify([]));
+    localStorage.setItem('BDBLayouts', JSON.stringify([]));
   };
 
   const updateActiveLayout = (layoutValues: DefaultValues) => {
@@ -58,7 +63,7 @@ const LayoutList = ({
         layout.id === id ? { ...layout, title: newName } : layout
       )
     );
-    setNewName("");
+    setNewName('');
     setShowInput(null);
   };
 
@@ -80,12 +85,13 @@ const LayoutList = ({
       layout.reach +
       layout.headTubeLength * Math.cos(headTubeAngle) +
       layout.forkLength * Math.cos(headTubeAngle) +
-      Math.cos(Math.asin(layout.bbDrop / layout.chainStay)) * layout.chainStay
+      Math.cos(Math.asin(layout.bbDrop / layout.chainStay)) *
+        layout.chainStay
     );
   };
 
-  const bodyStyles = "px-6 py-4";
-  const headingStyles = "px-6 py-4";
+  const bodyStyles = 'px-3 py-4';
+  const headingStyles = 'px-3 py-4';
 
   return (
     <div className="relative shadow-md rounded-lg">
@@ -100,7 +106,7 @@ const LayoutList = ({
               Travel
             </th>
             <th scope="col" className={headingStyles}>
-              Anti Squat @ 28% Sag
+              Anti Squat @ Sag
             </th>
             <th scope="col" className={headingStyles}>
               Progressiveness
@@ -121,7 +127,9 @@ const LayoutList = ({
             ? layoutArray.map((layout) => {
                 const travel =
                   layout.axlePath.path[0].y -
-                  layout.axlePath.path[layout.axlePath.path.length - 1].y;
+                  layout.axlePath.path[
+                    layout.axlePath.path.length - 1
+                  ].y;
                 const antiSquat = layout.antiSquat.path[43].y;
                 const progressiveness =
                   (layout.leverageRatio.path[
@@ -152,14 +160,19 @@ const LayoutList = ({
                             <div className="px-3 py-2">
                               <HexColorPicker
                                 color={layout.color}
-                                onChange={(e) => updateColor(e, layout.id)}
+                                onChange={(e) =>
+                                  updateColor(e, layout.id)
+                                }
                               />
                             </div>
                           </div>
                         }
                       >
-                        <Button pill style={{ backgroundColor: layout.color }}>
-                          {""}
+                        <Button
+                          pill
+                          style={{ backgroundColor: layout.color }}
+                        >
+                          {''}
                         </Button>
                       </Popover>
                     </td>
@@ -170,7 +183,7 @@ const LayoutList = ({
                       <input
                         ref={setRef(layout.id)}
                         className={`text-black ${
-                          showInput === layout.id ? "block" : "hidden"
+                          showInput === layout.id ? 'block' : 'hidden'
                         }`}
                         onBlur={() => rename(layout.id)}
                         value={newName}
@@ -178,12 +191,14 @@ const LayoutList = ({
                       />
                       <div
                         className={`${
-                          showInput === layout.id ? "hidden" : "flex"
+                          showInput === layout.id ? 'hidden' : 'flex'
                         } flex-row justify-between gap-1`}
                       >
                         <p>{layout.title}</p>
                         <button
-                          onClick={() => openAndFocus(layout.id, layout.title)}
+                          onClick={() =>
+                            openAndFocus(layout.id, layout.title)
+                          }
                         >
                           <svg
                             className="w-3"
@@ -196,7 +211,9 @@ const LayoutList = ({
                         </button>
                       </div>
                     </th>
-                    <td className={bodyStyles}>{Math.round(travel)}</td>
+                    <td className={bodyStyles}>
+                      {Math.round(travel)}
+                    </td>
                     <td className={bodyStyles}>
                       {Math.round(antiSquat * 1000) / 10}
                     </td>
@@ -222,7 +239,9 @@ const LayoutList = ({
                             <div className="px-3 py-2">
                               <GeometryTable
                                 layoutValues={layout.layoutValues}
-                                wheelbase={wheelbase(layout.layoutValues)}
+                                wheelbase={wheelbase(
+                                  layout.layoutValues
+                                )}
                               />
                             </div>
                           </div>
@@ -233,7 +252,9 @@ const LayoutList = ({
                     </td>
                     <td className={bodyStyles}>
                       <button
-                        onClick={() => updateActiveLayout(layout.layoutValues)}
+                        onClick={() =>
+                          updateActiveLayout(layout.layoutValues)
+                        }
                         className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
                       >
                         View
@@ -262,7 +283,10 @@ const LayoutList = ({
         </tbody>
       </table>
 
-      <button onClick={resetLayouts} className="bg-green-400 p-2 rounded-sm">
+      <button
+        onClick={resetLayouts}
+        className="bg-green-400 p-2 rounded-sm"
+      >
         Delete All Layouts
       </button>
     </div>

@@ -37,7 +37,6 @@ interface ResultsWrapperProps {
 
 const centerOfGravity = {x: 0, y: 650}
 
-
 const ResultsWrapper = ({
   layoutValues,
   layoutArray,
@@ -181,7 +180,7 @@ const ResultsWrapper = ({
               <ScatterPlot
                 inputData={antiSquat}
                 arrayInput={layoutArray.map((layout) => ({...layout.antiSquat, color: layout.color}))}
-                title="Anti Squat"
+                title="Anti Squat (50T)"
                 normalize={true}
                 travelOnXaxis={true}
               />

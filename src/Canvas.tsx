@@ -94,8 +94,8 @@ const Canvas = ({
         key={paused ? '1' : '0'}
         ref={ref}
         id="tutorial"
-        width={1600}
-        height={800}
+        width={2400}
+        height={1200}
         className="bg-[#818d92] aspect-square w-[120vh] h-[60vh] rounded-lg"
       >
         Bad Dog Bikes

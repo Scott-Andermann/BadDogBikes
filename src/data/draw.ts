@@ -91,7 +91,7 @@ DrawMasterProps) => {
 
   
   // Bottom Bracket
-  ctx.clearRect(0, 0, 1600, 800);
+  ctx.clearRect(0, 0, 2400, 1200);
   ctx.fillStyle = "red";
   ctx.beginPath();
   ctx.arc(zeroOffset.x, zeroOffset.y, 1.5 * 25.4 / 2, 0, 2 * Math.PI);
@@ -120,7 +120,7 @@ DrawMasterProps) => {
   ctx.stroke();
   
   ctx.beginPath();
-  ctx.arc(zeroOffset.x - axlePath[axlePath.length - 1].x, zeroOffset.y - axlePath[axlePath.length - 1].y, 136 / 2, 0, 2 * Math.PI);
+  ctx.arc(zeroOffset.x - axlePath[axlePath.length - 1].x, zeroOffset.y - axlePath[axlePath.length - 1].y, 208 / 2, 0, 2 * Math.PI);
   ctx.stroke();
   ctx.beginPath();
   ctx.arc(

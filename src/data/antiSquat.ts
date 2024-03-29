@@ -5,8 +5,8 @@ import {
   intersectionOfTwoLines,
 } from "./fourBarCalculations";
 
-const rChainRing = 136.1 / 2;
-const rCassette = 104 / 2; // 40T
+const rChainRing = 128 / 2;
+const rCassette = 208 / 2; // 50T
 
 export const calculateIFC = (
   layoutValues: DefaultValues,
