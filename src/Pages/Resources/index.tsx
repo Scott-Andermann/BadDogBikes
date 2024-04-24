@@ -24,6 +24,10 @@ const resourceLinks = [
     link: "http://didier.clergue.free.fr/gsxr/livres/Livre_Race_Tech's_Motorcycle_Suspension_Bible.pdf",
     title: 'Racetech Motorcycle Suspension Bible',
   },
+  {
+    link: "https://www.peterverdone.com/wiki/index.php?title=Shimano_Framebuilder_Info",
+    title: 'Shimano Framebuilder Info',
+  }
 ];
 
 const Resources = () => {

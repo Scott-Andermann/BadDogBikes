@@ -174,40 +174,40 @@ const ResultsWrapper = ({
             <div className="h-60 flex flex-row flex-wrap">
               <ScatterPlot
                 inputData={axlePath}
-                arrayInput={layoutArray.map((layout) => ({ ...layout.axlePath, color: layout.color }))}
+                arrayInput={layoutArray.map((layout) => ({ ...layout.axlePath, color: layout.color, name: layout.title }))}
                 title="Axle Path"
               />
               <ScatterPlot
                 inputData={antiSquat}
-                arrayInput={layoutArray.map((layout) => ({...layout.antiSquat, color: layout.color}))}
+                arrayInput={layoutArray.map((layout) => ({...layout.antiSquat, color: layout.color, name: layout.title}))}
                 title="Anti Squat (50T)"
                 normalize={true}
                 travelOnXaxis={true}
               />
               <ScatterPlot
                 inputData={antiRise}
-                arrayInput={layoutArray.map((layout) => ({...layout.antiRise, color: layout.color}))}
+                arrayInput={layoutArray.map((layout) => ({...layout.antiRise, color: layout.color, name: layout.title}))}
                 title="Anti Rise"
                 normalize={true}
                 travelOnXaxis={true}
               />
               <ScatterPlot
                 inputData={leverageRatio}
-                arrayInput={layoutArray.map((layout) => ({...layout.leverageRatio, color: layout.color}))}
+                arrayInput={layoutArray.map((layout) => ({...layout.leverageRatio, color: layout.color, name: layout.title}))}
                 title="Leverage Ratio"
                 normalize={true}
                 travelOnXaxis={true}
               />
               <ScatterPlot
                 inputData={chainGrowth}
-                arrayInput={layoutArray.map((layout) => ({...layout.chainGrowth, color: layout.color}))}
+                arrayInput={layoutArray.map((layout) => ({...layout.chainGrowth, color: layout.color, name: layout.title}))}
                 title="Chain Growth"
                 normalize={true}
                 travelOnXaxis={true}
               />
               <ScatterPlot
                 inputData={instantCenter}
-                arrayInput={layoutArray.map((layout) => ({...layout.instantCenter, color: layout.color}))}
+                arrayInput={layoutArray.map((layout) => ({...layout.instantCenter, color: layout.color, name: layout.title}))}
                 title="Instant Center"
                 normalize={false}
               />

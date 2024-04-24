@@ -1,7 +1,7 @@
 import { HumanInputProps } from "../HumanInputs";
 import { DefaultValues } from "../InputForm";
-import { calculateLengthOfLine } from "./fourBarCalculations";
 
+const seatTubeLength = 300;
 export interface Position {
   x: number;
   y: number;
@@ -89,14 +89,28 @@ DrawMasterProps) => {
     direction = 1;
   }
 
-  
-  // Bottom Bracket
   ctx.clearRect(0, 0, 2400, 1200);
+
+
+  drawFrontTriangle({
+    ctx,
+    layoutValues,
+    zeroOffset,
+    humanInput: undefined,
+  });
+  drawSeatTube({
+    ctx,
+    layoutValues,
+    zeroOffset,
+    humanInput: undefined,
+  });
+  // Bottom Bracket
   ctx.fillStyle = "red";
   ctx.beginPath();
   ctx.arc(zeroOffset.x, zeroOffset.y, 1.5 * 25.4 / 2, 0, 2 * Math.PI);
   ctx.fill();
   ctx.fillStyle = "blue";
+
   if (showConstruction) {
 
   // Draw construction Lines
@@ -171,18 +185,8 @@ DrawMasterProps) => {
     bellcrankOffset,
     step,
   });
-  drawSeatTube({
-    ctx,
-    layoutValues,
-    zeroOffset,
-    humanInput: undefined,
-  });
-  drawFrontTriangle({
-    ctx,
-    layoutValues,
-    zeroOffset,
-    humanInput: undefined,
-  });
+
+
   
   if (IFC !== undefined && instantCenter !== undefined) {
     drawAntiSquat({
@@ -411,7 +415,7 @@ DrawFrameProps) => {
   //   ctx.fill();
   //   ctx.fillStyle = "black";
   // }
-  ctx.lineWidth = 10;
+  ctx.lineWidth = 30;
   ctx.lineCap = "round";
   ctx.beginPath();
   ctx.moveTo(zeroOffset.x, zeroOffset.y);
@@ -447,8 +451,8 @@ const drawFrontTriangle = ({
       layoutValues.forkOffset * Math.cos(headTubeAngle) - frontEndOffset,
   };
   ctx.moveTo(
-    zeroOffset.x - 300 * Math.cos(seatTubeAngle),
-    zeroOffset.y - 300 * Math.sin(seatTubeAngle)
+    zeroOffset.x - layoutValues.topTubeHeight * Math.cos(seatTubeAngle),
+    zeroOffset.y - layoutValues.topTubeHeight * Math.sin(seatTubeAngle)
   );
 
   ctx.lineTo(
@@ -457,6 +461,8 @@ const drawFrontTriangle = ({
   );
   ctx.lineTo(bottomOfHeadTube.x, bottomOfHeadTube.y - frontEndOffset);
   ctx.lineTo(zeroOffset.x, zeroOffset.y);
+  ctx.lineWidth = 50;
+  ctx.strokeStyle = "#061826";
   ctx.stroke();
 
   // Draw Fork

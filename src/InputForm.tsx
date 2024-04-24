@@ -20,6 +20,7 @@ export interface DefaultValues {
   axleOffsetX: number;
   axleOffsetY: number;
   seatTubeAngle: number;
+  topTubeHeight: number;
   headTubeAngle: number;
   headTubeLength: number;
   forkLength: number;
@@ -50,6 +51,7 @@ export const defaultValues: DefaultValues = {
   axleOffsetX: 10,
   axleOffsetY: 10,
   seatTubeAngle: 80,
+  topTubeHeight: 375,
   headTubeAngle: 65,
   headTubeLength: 100,
   forkLength: 565,
@@ -83,15 +85,23 @@ const InputForm = ({
     "border border-solid border-gray-300 rounded-sm bg-blue-200";
 
   const onSubmit = (data: DefaultValues) => {
+    console.log("handling submit");
+    
     setNewValues(data);
   };
+
+  const preventEnter = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+    }
+  }
 
   useEffect(() => {
     reset(layoutValues);
   }, [updateFromList]);
 
   return (
-    <form onBlur={handleSubmit((data) => onSubmit(data))}>
+    <form onBlur={handleSubmit((data) => onSubmit(data))} onKeyPress={preventEnter}>
       <div className="flex flex-row gap-2 p-4">
         <div className="flex flex-col gap-1">
           <h2 className="text-gray-100 text-xl font-bold">Geometry Inputs</h2>
@@ -157,6 +167,14 @@ const InputForm = ({
             register={register}
             errors={errors}
             currentValue={layoutValues.seatTubeAngle}
+          />
+          <InputField
+            label="Top Tube Height"
+            id="topTubeHeight"
+            required
+            register={register}
+            errors={errors}
+            currentValue={layoutValues.topTubeHeight}
           />
           <InputField
             label="BB Drop"

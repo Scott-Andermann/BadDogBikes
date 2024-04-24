@@ -40,7 +40,7 @@ const Canvas = ({
 }: CanvasProps) => {
   const [showConstruction, setShowConstruction] = useState(true);
   const ref = useRef<HTMLCanvasElement>(null);
-  const zeroOffset = { x: 500, y: 750 };
+  const zeroOffset = { x: 850, y: 850 };
 
   const bellcrankOffset = {
     x: zeroOffset.x - layoutValues.bellcrankX,

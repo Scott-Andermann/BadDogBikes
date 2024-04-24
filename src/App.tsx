@@ -10,7 +10,6 @@ import ClickAndDrag from "./ClickAndDrag";
 
 export interface Path {
   path: Position[];
-  name: string;
 }
 
 export interface LayoutArray {
@@ -130,7 +129,6 @@ function App() {
           />
         </div>
       </div>
-      <ClickAndDrag />
     </Flowbite>
   );
 }

@@ -26,6 +26,7 @@ ChartJS.register(
 
 interface PathWithColor extends Path {
   color: string;
+  name: string;
 }
 
 interface ScatterChartProps {
@@ -36,12 +37,13 @@ interface ScatterChartProps {
   travelOnXaxis?: boolean;
   xLabel?: string;
   yLabel?: string;
+  yBeginAtZero?: boolean;
 }
 
 const normalizeData = (
   dataArray: Position[],
   travelOnXaxis: boolean,
-  normalize: boolean
+  normalize: boolean,
 ) => {
   if (!normalize) {
     return dataArray;
@@ -64,8 +66,8 @@ const ScatterPlot = ({
   title,
   normalize = true,
   travelOnXaxis = false,
+  yBeginAtZero = false,
 }: ScatterChartProps) => {
-
   const data = {
     datasets: [
       {
@@ -92,6 +94,11 @@ const ScatterPlot = ({
       title: {
         display: true,
         text: title,
+      },
+    },
+    scales: {
+      y: {
+        beginAtZero: yBeginAtZero,
       },
     },
   };
